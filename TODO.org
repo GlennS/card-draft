@@ -1,0 +1,27 @@
+* Learn about Scripting
+[[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Scripting][Dota 2 Scripting]]
+[[http://www.lua.org/manual/5.3/][Lua Reference]]
+
+* Plan
+** A custom game which is just dota 2
+First sort out the initial setup with no changes.
+
+See: [[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Addon_Overview][addons]]
+
+Consider using [[https://github.com/bmddota/barebones][barebones]].
+
+** Customize hero choice screen
+Find a hook to modify this
+
+** Device to assign starting hands
+Deal each player the right number of each type ofcards, ensuring no overlap.
+
+** Display cards and choices
+
+** Pass cards around after players all made their choice
+
+** Card eligibility and automatic plays
+
+** Timer and random plays
+
+* Future Plans
