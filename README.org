@@ -1,14 +1,20 @@
-* Mixed Draft
-/Mixed Draft/ is a custom game mode for [[http://www.dota2.com][Dota 2]] which changes the set-up phase by giving players options for which abilities and heroes they want.
-
-Once you are past the set-up phase, the game plays as normal.
+* Card Draft
+/Card Draft/ is a custom game mode for [[http://www.dota2.com][Dota 2]]. In particular, it is an /[[http://dota2.gamepedia.com/Game_modes#Ability_Draft][Ability Draft]]/ variant.
 
 ** Goals
-/Mixed Draft/ is a variant on the built-in /Ability Draft/ mode, but is intended to make it more streamlined by limiting the choices a player is presented with at any one time.
+In standard /Ability Draft/, there are a few problems:
+ + You need to read through 48 skills to start with, work out good combos etc.
+ + Only one player picks at a time, resulting in a long start time.
+ + Players may gain a large advantage based on their position in the draft.
+ + Chance of randoming a hero which is useless without good skills.
 
-It also includes a /pass-leftover-cards/ mechanic, which potentially adds a little extra strategy in that you may choose abilites in order to deny them to the other team.
+/Card Draft/ addresses these by giving each player their own, smaller, pool of abilities to draft from. Players pick simultaneously, speeding up setup time.
 
-This game mode is somewhat inspired by the board game [[https://boardgamegeek.com/boardgame/68448/7-wonders][Seven Wonders]].
+Unpicked abilities are passed to the next player. Each player will pick at most one ability from each hand.
+
+The draft includes heroes, providing a strategic choice between picking a strong hero or a strong ability.
+
+This game mode is inspired by the board game [[https://boardgamegeek.com/boardgame/68448/7-wonders][Seven Wonders]].
 
 ** Drafting
 Players choose between /cards/. A card represents an ability (normal or ultimate) or a hero.

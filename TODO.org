@@ -10,6 +10,10 @@ See: [[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Addon_Over
 
 Consider using [[https://github.com/bmddota/barebones][barebones]].
 
+https://moddota.com/forums/discussion/872/modding-dota-10v10
+
+There's a UI example.
+
 ** Customize hero choice screen
 Find a hook to modify this
 
