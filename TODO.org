@@ -8,7 +8,13 @@ https://github.com/Lattyware/itemdraft (try this out)
 
 This is the stuff: https://github.com/Lattyware/itemdraft/blob/master/game/dota_addons/itemdraft/scripts/vscripts/draft.lua
 
-=PauseGame(true)= during the draft, =PauseGame(false)= when it's done.
+** What runs where?
+There is Lua on both client and server.
+script_attach_debugger cl_script_attach_debugger
+
+Vconsole2 is what runs in the workshop tools. What does it have access to?
+
+My scripts aren't going in. Bleh.
 
 ** Panorama
 This is an XML/CSS/JS UI framework.
@@ -65,8 +71,11 @@ hide the hero choice screen.
 
 Break here.
 
+=PauseGame(true)= during the draft, =PauseGame(false)= when it's done.
+
 ** Device to assign starting hands
 Deal each player the right number of each type of cards, ensuring no overlap.
+
 
 ** Display cards and choices
 ** Pass cards around after players all made their choice

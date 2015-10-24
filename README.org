@@ -57,8 +57,8 @@ See [[file:TODO.org][TODO.org]] for progress and future plans.
 This custom game will be published in the Dota 2 workshop. Search for /Card Draft/ from within the custom games tab to get started.
 
 *** Installation for Development
-Install theDota 2 workshop tools (these only work on Windows).
+Install the Dota 2 workshop tools (these only work on Windows).
 
-Open Windows Powershell, and run the [[file:install.ps1][install.ps1 file]] to copy your files into the right place. You will have to re-run this script every time you make changes.
+Run the [[file:install.sh][install.sh file]] to copy your files into the right place. You will have to re-run this script every time you make changes.
 
 Launch the workshop tools, open the console, and run =dota_launch_custom_game card-draft dota=.
