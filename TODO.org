@@ -2,30 +2,80 @@
 [[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Scripting][Dota 2 Scripting]]
 [[http://www.lua.org/manual/5.3/][Lua Reference]]
 
+Lua things may go in /game. Must other stuff in /game is not helpful.
+
+https://github.com/Lattyware/itemdraft (try this out)
+
+This is the stuff: https://github.com/Lattyware/itemdraft/blob/master/game/dota_addons/itemdraft/scripts/vscripts/draft.lua
+
+=PauseGame(true)= during the draft, =PauseGame(false)= when it's done.
+
+** Panorama
+This is an XML/CSS/JS UI framework.
+
+Panels are elements.
+
+*** Lua
+Can use Lua to create the UI dynamically instead.
+
+*** Custom loading screen
+custom_loading_screen.xml
+
+*** Valve UI
+[[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Panorama/Valve_Provided_UI][Valve UI]] may have some helpful bits?
+
+** Libraries
+Considering using the Barebones timers library?
+
+** Empty Abilities
+Found in [[https://github.com/Lattyware/itemdraft/blob/master/game/dota_addons/itemdraft/scripts/npc/npc_heroes_custom.txt][npc_heroes_custom.txt]]:
+
+(Why these?)
+
+"Ability1"         "invoker_empty1"
+"Ability2"         "invoker_empty2"
+"Ability3"         "doom_bringer_empty1"
+"Ability4"         "doom_bringer_empty2"
+"Ability5"         "wisp_empty1"
+"Ability6"         "wisp_empty2"
+
+** Localization
+game\dota_addons\card_draft\resource\addon_english.txt
+game\dota_addons\card_draft\panorama\localization\addon_english.txt (does this come from content originally?)
+
+** addon_game_mode.lua
+require other files.
+
+GameMode:InitGameMode()
+
+** vscripts/gamemode.lua
+Provides some hooks:
+
+=GameRules:EnableCustomGameSetupAutoLaunch(false)= iniside InitGameMode
+
+=function GameMode:OnAllPlayersLoaded()= for hero selection
+
+=GameMode:OnHeroInGame(hero)= first spawn - can change abilities here?
+
 * Plan
-** A custom game which is just dota 2
-First sort out the initial setup with no changes.
-
-See: [[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Addon_Overview][addons]]
-
-Consider using [[https://github.com/bmddota/barebones][barebones]].
-
-https://moddota.com/forums/discussion/872/modding-dota-10v10
-
-There's a UI example.
-
 ** Customize hero choice screen
-Find a hook to modify this
+Implement function GameMode:OnAllPlayersLoaded()
+
+hide the hero choice screen.
+
+Break here.
 
 ** Device to assign starting hands
-Deal each player the right number of each type ofcards, ensuring no overlap.
+Deal each player the right number of each type of cards, ensuring no overlap.
 
 ** Display cards and choices
-
 ** Pass cards around after players all made their choice
 
 ** Card eligibility and automatic plays
 
 ** Timer and random plays
+
+** English Localization
+Custom game name should appear in the right place.
 
 * Future Plans
