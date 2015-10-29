@@ -1,8 +1,0 @@
-<!--
-    Shows the draft actions you can take at this point.
--->
-<root>
-  <Panel>
-    <Label>Draft Actions</Label>
-  </Panel>
-</root>

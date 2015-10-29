@@ -2,7 +2,6 @@
     width: 100%;
     height: 100%;
     background-color: pink;
-    flow-children: down;
 }
 
 #timer {
@@ -14,25 +13,50 @@
 }
 
 #cards {
-    width: 80%;
-    height: 30%;
+    width: 100%;
     vertical-align: middle;
     horizontal-align: middle;
-    background-color: yellow;
-}
-
-#draft-actions {
-    width: 30%;
-    height: 30%;
-    horizontal-align: middle;
-    background-color: blue;
+    flow-children: right;
 }
 
 #confirmed-picks {
-    width: 50%;
-    height: 30%;
+    width: 100%;
     vertical-align: bottom;
     horizontal-align: middle;
     background-color: orange;
+    flow-children: right;
 }
 
+.card {
+    background-color: grey;
+    margin: 10px;
+}
+
+.card:disabled {
+    opacity: 0.3;
+    blur: gaussian(6, 6, 1);
+}
+
+.card:hover {
+     flow-children: down;
+}
+
+.card DOTAHeroImage {
+    horizontal-align: middle;
+}
+
+.card DOTAAbilityImage {
+    horizontal-align: middle;
+}
+
+.ability-card {
+    border: 1px solid green;
+}
+
+.ultimate-card {
+    border: 1px solid blue;
+}
+
+.hero-card {
+    border: 1px solid red;
+}

@@ -156,11 +156,11 @@ I think for now I will have to make a text file list? Ok.
   + DynamicHud_Destroy
 
 ** Display cards and choices
- 1. Make some dummy card data
- 2. Display some cards with the dummy data
- 3. Make some dummy 'select abilities' data
- 4. Disable some cards based on what's previously selected.
- 5. Display choices based on whether there are any eligible cards? (Options are choose, pass?. Maybe we have no options?)
+ 1. Clicking doesn't work
+ 2. Tooltips don't work (would they work on the Button instead?).
+
+onmouseover="DOTAShowAbilityTooltip(item_bottle)" onmouseout="DOTAHideAbilityTooltip()"
+
 
 ** Plumbing
  1. Fire event when a person selects a card.
