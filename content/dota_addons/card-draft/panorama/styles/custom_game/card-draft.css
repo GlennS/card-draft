@@ -13,40 +13,32 @@
 }
 
 #cards {
-    width: 100%;
     vertical-align: middle;
     horizontal-align: middle;
     flow-children: right;
 }
 
 #confirmed-picks {
-    width: 100%;
     vertical-align: bottom;
     horizontal-align: middle;
-    background-color: orange;
     flow-children: right;
+    margin-bottom: 10px;
 }
 
 .card {
     background-color: grey;
     margin: 10px;
+    flow-children: down;
+    opacity: 0.9;
+}
+
+.card:enabled:hover {
+    opacity: 1.0;
 }
 
 .card:disabled {
     opacity: 0.3;
     blur: gaussian(6, 6, 1);
-}
-
-.card:hover {
-     flow-children: down;
-}
-
-.card DOTAHeroImage {
-    horizontal-align: middle;
-}
-
-.card DOTAAbilityImage {
-    horizontal-align: middle;
 }
 
 .ability-card {

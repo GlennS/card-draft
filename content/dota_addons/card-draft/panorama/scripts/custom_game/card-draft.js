@@ -36,15 +36,13 @@
 	    var el = $.CreatePanel("DOTAAbilityImage", parent, "");
 	    el.abilityname = name;
 
-	    el.onmouseover = function() {
-		// TODO: make this work
-		$.Msg("moused over " + $.Localize("#" + name));
+	    el.SetPanelEvent("onmouseover", function() {
 		$.DispatchEvent("DOTAShowAbilityTooltip", el, name);
-	    };
+	    });
 	    
-	    el.onmouseout = function() {
+	    el.SetPanelEvent("onmouseout", function() {
 		$.DispatchEvent("DOTAHideAbilityTooltip", el);
-	    };
+	    });
 
 	    return el;
 	},
@@ -55,13 +53,13 @@
 		el.heroname = name;
 		el.heroimagestyle = "portrait";
 
-		el.onmouseover = function() {
+		el.SetPanelEvent("onmouseover", function() {
 		    $.DispatchEvent("DOTAShowTextTooltip", $.Localize("#" + name));
-		};
+		});
 		
-		el.onmouseout = function() {
+		el.SetPanelEvent("onmouseout", function() {
 		    $.DispatchEvent("DOTAHideTextTooltip", el);
-		};
+		});
 		
 		return el;
 	    },
@@ -90,9 +88,7 @@
 
 	    cardElements.push(cardEl);
 
-	    cardEl.onactivate = function() {
-		$.Msg("button pushed");
-		
+	    cardEl.SetPanelEvent("onactivate", function() {
 		/*
 		 Can only activate one card from each hand.
 		 */
@@ -101,20 +97,18 @@
 		});
 
 		pick(card);		
-	    };
+	    });
 	    
 	    var image = imageTypes[card.type](cardEl, card.name);
 	});
     },
 
 	pick = function(card) {
-	    $.Msg("doing a pick");
-	    
 	    // Tell the server what we want.
-	    $.DispatchEvent("drafted-card", card);
+	    GameEvents.SendCustomGameEventToServer("drafted-card", card);
 
 	    // Display the pick to the player.
-	    imageTypes[card.type](picksContainer, card);
+	    imageTypes[card.type](picksContainer, card.name);
 	},
 
 	isAvailable = function(card) {

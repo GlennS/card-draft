@@ -112,8 +112,9 @@ Provides some hooks:
 ** Device to assign starting hands
 Deal each player the right number of each type of cards, ensuring no overlap.
 
- 1. Fix loading the heroes
- 2. Fix loading the abilities
+ 1. Figure out why the file doesn't load any more.
+ 2. Fix loading the heroes
+ 3. Fix loading the abilities
 
 *** Finding Heroes, Abilities
 I think for now I will have to make a text file list? Ok.
@@ -154,13 +155,6 @@ I think for now I will have to make a text file list? Ok.
  + CDOTA_CustomUIManager
   + DynamicHud_Create
   + DynamicHud_Destroy
-
-** Display cards and choices
- 1. Clicking doesn't work
- 2. Tooltips don't work (would they work on the Button instead?).
-
-onmouseover="DOTAShowAbilityTooltip(item_bottle)" onmouseout="DOTAHideAbilityTooltip()"
-
 
 ** Plumbing
  1. Fire event when a person selects a card.
