@@ -85,7 +85,7 @@ function loadAbilities(heroes)
       -- TODO: Create the hero temporarily in order to enumerate its abilities.
       local hero = CreateUnitByName(heroname, vLocation, true, hNPCOwner, hUnitOwner, 1)
 
-      for i, hero:GetAbilityCount() do
+      for i, hero in GetAbilityCount() do
 	 local ability = hero:GetAbilityByIndex(i)
 
 	 if ability:GetHeroLevelRequiredToUpgrade() > 1 then
