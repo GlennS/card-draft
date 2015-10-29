@@ -1,0 +1,38 @@
+.draft-container {
+    width: 100%;
+    height: 100%;
+    background-color: pink;
+    flow-children: down;
+}
+
+#timer {
+    width: 20%;
+    height: 5%;
+    vertical-align: top;
+    horizontal-align: middle;
+    background-color: green;
+}
+
+#cards {
+    width: 80%;
+    height: 30%;
+    vertical-align: middle;
+    horizontal-align: middle;
+    background-color: yellow;
+}
+
+#draft-actions {
+    width: 30%;
+    height: 30%;
+    horizontal-align: middle;
+    background-color: blue;
+}
+
+#confirmed-picks {
+    width: 50%;
+    height: 30%;
+    vertical-align: bottom;
+    horizontal-align: middle;
+    background-color: orange;
+}
+

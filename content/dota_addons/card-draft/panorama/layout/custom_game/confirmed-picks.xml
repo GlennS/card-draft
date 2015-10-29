@@ -1,0 +1,8 @@
+<!--
+    Shows the heroes and abilities you have picked already in this draft.
+-->
+<root>
+  <Panel>
+    <Label>Confirmed picks</Label>
+  </Panel>
+</root>

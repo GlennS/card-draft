@@ -1,0 +1,20 @@
+<!--
+    UI structure for the draft screen.
+
+Replaces hero selection.
+-->
+<root>
+  <styles>
+    <include src="file://{resources}/styles/custom_game/card-draft.css" />
+  </styles>
+  <scripts>
+  </scripts>
+  <Panel class="draft-container">
+    <Label text="draft-container" />
+    
+    <Panel id="timer" layoutfile="file://{resources}/layout/custom_game/timer.xml" />
+    <Panel id="cards" layoutfile="file://{resources}/layout/custom_game/cards.xml" />
+    <Panel id="draft-actions" layoutfile="file://{resources}/layout/custom_game/draft-actions.xml" />
+    <Panel id="confirmed-picks" layoutfile="file://{resources}/layout/custom_game/confirmed-picks.xml" />
+  </Panel>
+</root>

@@ -1,0 +1,8 @@
+<!--
+    Displays how much time is available to make your current choice.
+-->
+<root>
+  <Panel>
+    <Label>Timer</Label>
+  </Panel>
+</root>
