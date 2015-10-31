@@ -11,10 +11,12 @@ Replaces hero selection.
     <include src="file://{resources}/scripts/custom_game/card-draft.js" />
   </scripts>
   <Panel class="draft-container">
-    <Label text="draft-container" />
-    
-    <Panel id="timer" layoutfile="file://{resources}/layout/custom_game/timer.xml" />
-    <Panel id="cards" layoutfile="file://{resources}/layout/custom_game/cards.xml" />
-    <Panel id="confirmed-picks" layoutfile="file://{resources}/layout/custom_game/confirmed-picks.xml" />
+    <Label class="title" text="#addon-name" />
+
+    <Panel id="timer">
+      <Label>Timer</Label>
+    </Panel>
+    <Panel id="cards"/>
+    <Panel id="confirmed-picks"/>
   </Panel>
 </root>
