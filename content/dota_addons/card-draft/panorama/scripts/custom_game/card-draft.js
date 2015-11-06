@@ -11,13 +11,13 @@
 	picksContainer = $("#confirmed-picks"),
 	
 	dummyHand = [
-	    {type: ability, name: "antimage_blink", friendlyName: "Blink" },
-	    {type: ability, name: "axe_berserkers_call", friendlyName: "Berserker's Call"},
-	    {type: ability, name: "bane_enfeeble", friendlyName: "Enfeeble"},
-	    {type: ability, name: "bloodseeker_bloodrage", friendlyName: "Bloodrage"},
-	    {type: ultimate, name: "bloodseeker_rupture", friendlyName: "Rupture"},
-	    {type: ultimate, name: "drow_ranger_marksmanship", friendlyName: "Marksmanship"},
-	    {type: hero, name: "npc_dota_hero_axe", friendlyName: "Axe"}
+	    {type: ability, name: "antimage_blink" },
+	    {type: ability, name: "axe_berserkers_call"},
+	    {type: ability, name: "bane_enfeeble"},
+	    {type: ability, name: "bloodseeker_bloodrage"},
+	    {type: ultimate, name: "bloodseeker_rupture"},
+	    {type: ultimate, name: "drow_ranger_marksmanship"},
+	    {type: hero, name: "npc_dota_hero_axe"}
 	],
 
 	limits = {
@@ -105,7 +105,7 @@
 
 	pick = function(card) {
 	    // Tell the server what we want.
-	    GameEvents.SendCustomGameEventToServer("drafted-card", card);
+	    GameEvents.SendCustomGameEventToServer("player-drafted-card", card);
 
 	    // Display the pick to the player.
 	    imageTypes[card.type](picksContainer, card.name);
@@ -129,7 +129,7 @@
 	};
 
     showHand(dummyHand);
-    // TODO: listen for new hand events.
+    GameEvents.Subscribe("player-passed-hand", showHand);
     // TODO: timer
     // TODO: listen for new pick events (in case we randomed).
 }());
