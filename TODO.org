@@ -7,7 +7,7 @@ Lua things may go in /game. Must other stuff in /game is not helpful.
 [[https://github.com/Lattyware/itemdraft][item draft]] is a good example.
 
 ** Client-Server communications
-There are [[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Custom_Game_Events][Custom Games Events]], which can be used from Lua with the =CustomGameEventManager=. You can subscribe to these on the client.
+There are [[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Custom_Game_Events][Custom Game Events]], which can be used from Lua with the =CustomGameEventManager=. You can subscribe to these on the client.
 
 [[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Custom_Nettables][Custom Net Tables]] stores key-value pairs. They send events to the client when a key changes.
 
@@ -108,65 +108,50 @@ Provides some hooks:
 
 =GameMode:OnHeroInGame(hero)= first spawn - can change abilities here?
 
+
+** Key-Value Files
+https://developer.valvesoftware.com/wiki/KeyValues
+
+Lua has a LoadKeyValues function.
+
+Can include using: #base "file path"
+
+// These are comments.
+
+npc_heroes.txt
+npc_abilities.txt
+
+(They're in the vpk?)
+
+** VPK file format
+https://developer.valvesoftware.com/wiki/VPK_File_Format
+
+
 * Plan
-** Device to assign starting hands
-Deal each player the right number of each type of cards, ensuring no overlap.
-
- 1. Figure out why the file doesn't load any more.
- 2. Fix loading the heroes
- 3. Fix loading the abilities
-
-*** Finding Heroes, Abilities
-I think for now I will have to make a text file list? Ok.
-
- + CreateHeroForPlay("unitname", player) will let us set the hero
- + SetCustomGameForceHero("heroname") hmmmmmm
- + Entities
-  + FindByClassname(nil)
-  + FindAllByClassname
-  + FindByName(nil)
-  + First(), Next(previousEntity)
-
- + CDOTABaseAbility
-  + GetHeroLevelRequiredToUpgrade
-  + IsItem
-  + IsTrained
-  + SetAbilityIndex
-
- + CBasePlayer
- + CDOTAPlayer
-  + GetPlayerID
-  + GetPlayer(id)
-  + GetPlayerName()
-  + GetSelectedHeroEntity()
-  + ReplaceHeroWith(class, gold, xp)
-
- + CDOTA_BaseNPC
-  + AddAbility(name)
-  + GetAbilityByIndex()
-  + GetAbilityCount()
-  + RemoveAbility(name)
-
- + CDOTA_BaseNPC_Hero
-
- + CDOTA_GameRules
-  + SetHeroSelectionTime(0) may be useful before we unpause?
-
- + CDOTA_CustomUIManager
-  + DynamicHud_Create
-  + DynamicHud_Destroy
-
 ** Plumbing
  1. Fire event when a person selects a card.
- 2. Fire an event when new hands are ready.
+ 2. The JavaScript isn't getting our event - are we listening too late / firing too early?
 
 ** Pass cards around after players all made their choice
+This should work? Test it.
 
-** Card eligibility and automatic plays
+** Modularize
+There's loads of stuff in the same file. Break it up.
+
+** Automatic plays and passes
 
 ** Timer and random plays
 
 ** English Localization
 Custom game name should appear in the right place.
+
+Unhappy because not unicode? But it clearly is...
+
+** Tidy up which abilities and heroes are available
+ 1. sub-abilities
+ 2. empty/hidden
+ 3. non-hero abilities (creeps, roshan, greevils, cny, courier)
+ 4. throw_snowball, firework, healing_campfire, throw_coal
+ 5. probably remove invoker entirely?
 
 * Future Plans
