@@ -127,14 +127,13 @@ npc_abilities.txt
 https://developer.valvesoftware.com/wiki/VPK_File_Format
 
 
-* Plan
-** Timer and random plays
-
-
+* Make it work
 ** English Localization
 Custom game name should appear in the right place.
 
 Unhappy because not unicode? But it clearly is...
+
+Is the timer going too quickly?
 
 ** Tidy up which abilities and heroes are available
  1. sub-abilities
@@ -142,8 +141,16 @@ Unhappy because not unicode? But it clearly is...
  3. non-hero abilities (creeps, roshan, greevils, cny, courier)
  4. throw_snowball, firework, healing_campfire, throw_coal
  5. probably remove invoker entirely?
+ 6. Test deward
 
-
-** Styling
+** Basic Styling
  1. Put the abilities in order
-* Future Plans
+ 2. some transitions?
+
+
+
+** Publish
+
+* Styling
+
+* Audio

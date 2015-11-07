@@ -62,3 +62,10 @@ Install the Dota 2 workshop tools (these only work on Windows).
 Run the [[file:install.sh][install.sh file]] to copy your files into the right place. You will have to re-run this script every time you make changes.
 
 Launch the workshop tools, open the console, and run =dota_launch_custom_game card-draft dota=.
+
+** Credits
+Developed by [[https://github.com/GlennS][Glenn Searby]].
+
+Original idea by Natasha Boddy.
+
+Thanks to [[https://github.com/bmddota][bmddota]] for use of the [[https://github.com/bmddota/barebones/blob/source2/game/dota_addons/barebones/scripts/vscripts/libraries/timers.lua][Timers]] library ([[https://github.com/bmddota/barebones/blob/source2/LICENSE][Apache Licensed)]].

@@ -9,6 +9,7 @@
 
 	cardsContainer = $("#cards"),
 	picksContainer = $("#confirmed-picks"),
+	roundTimer = $("#timer-text"),
 	
 	dummyHand = [
 	    {type: ability, name: "antimage_blink" },
@@ -94,10 +95,10 @@
 	},
 
 	pick = function(card) {
+	    updateUIToReflectPick(card);
+	    
 	    // Tell the server what we want.
 	    GameEvents.SendCustomGameEventToServer("player-drafted-card", card);
-
-	    updateUIToReflectPick(card);
 	},
 
 	alreadyPicked = function(card) {
@@ -121,7 +122,11 @@
 	     Prevent activating any further cards from that hand.
 	     */
 	    cardElements.forEach(function(otherCardEl) {
-		otherCardEl.enabled = false;
+		try {
+	    	    otherCardEl.enabled = false;
+		} catch (e) {
+		    // No-op, the card probably no longer exists.
+		}
 	    });
 
 	    // Keep a record of what we chose.
@@ -139,6 +144,10 @@
 	    }
 
 	    return needed > 0;
+	},
+
+	updateRoundTimer = function(timerValue) {
+	    roundTimer.text = timerValue.time + "s";
 	};
 
     GameEvents.Subscribe("player-passed-hand", showHand);
@@ -146,6 +155,7 @@
     // Listen for new pick events (in case we were forced to pick a card because we ran out of time, or it was the only option).
     GameEvents.Subscribe("player-pick-confirmed", updateUIToReflectPick);
 
+    GameEvents.Subscribe("round-timer-count", updateRoundTimer);
+
     GameEvents.SendCustomGameEventToServer("panorama-js-ready", {});
-    // TODO: timer
 }());

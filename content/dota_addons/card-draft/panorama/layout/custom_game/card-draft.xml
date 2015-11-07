@@ -14,7 +14,7 @@ Replaces hero selection.
     <Label class="title" text="#addon-name" />
 
     <Panel id="timer">
-      <Label>Timer</Label>
+      <Label id="timer-text">Timer</Label>
     </Panel>
     <Panel id="cards"/>
     <Panel id="confirmed-picks"/>

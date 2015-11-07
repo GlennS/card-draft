@@ -1,8 +1,12 @@
 require("players")
 require("events")
 require("inputs")
+require("lib/timers")
 
 teams = {DOTA_TEAM_GOODGUYS, DOTA_TEAM_BADGUYS}
+
+roundTime = 15
+timeRemaining = roundTime
 
 -- Types and quantities of cards:
 --- Dealt in initial hand
@@ -87,6 +91,7 @@ function deal()
       playerDraftedCard
    )
    waitForAllPlayers(sendHandsToPlayers)
+   Timers:CreateTimer({useGameTime = false, callback = notifyPlayersOfTimeRemaining})
 end
 
 -- Decide which player we'll pass our hand to.
@@ -170,7 +175,7 @@ function playerDraftedCard(playerId, card)
    -- Check if this pick has ended the game.
    if not checkForEnd() then
       -- Otherwise, see if it's time to pass our hands on.
-      maybePickupNextHands()
+      maybeNextRound()
    end
 end
 
@@ -210,11 +215,15 @@ function checkForEnd()
 end
 
 -- If all the players have picked a card (or been forced to pick a card, or to pass), move the hands around.
-function maybePickupNextHands()
+function maybeNextRound()
    if forAllPlayers(hasPicked) then
-      forEachPlayer(pickupHand)
-      sendHandsToPlayers()
+      nextRound()
    end
+end
+
+function nextRound()
+   forEachPlayer(pickupHand)
+   sendHandsToPlayers()
 end
 
 function pickupHand(playerId)
@@ -226,12 +235,44 @@ function hasPicked(playerId)
 end
 
 function sendHandsToPlayers()
+   timeRemaining = roundTime
    forEachPlayer(sendHandToPlayer)
    forEachPlayer(testForAutomaticPlay)
 end
 
+function notifyPlayersOfTimeRemaining()
+   timeRemaining = timeRemaining - 1
+   CustomGameEventManager:Send_ServerToAllClients("round-timer-count", {time = timeRemaining})
+   if timeRemaining <= 0 then
+      timeRemaining = roundTime
+      forcePlayersToRandom()
+   end
+   return 1
+end
+
+-- Force all the remaining players to choose randomly.
+function forcePlayersToRandom()
+   forEachPlayer(forcePlayerToRandom)
+end
+
+-- Check if the player still has to choose this round.
+-- If they do, force them to choose randomly from the cards they are allowed to pick.
+function forcePlayerToRandom(playerId)
+   local playableCards = getPlayableCards(playerId)
+   if #playableCards > 0 then
+      playerDraftedCard(
+	 playerId,
+	 randomCard(playableCards)
+      )
+   end
+end
+
+function randomCard(cards)
+   return cards[RandomInt(1, #cards)]
+end
+
 function testForAutomaticPlay(playerId)
-   playableCards = getPlayableCards(playerId)
+   local playableCards = getPlayableCards(playerId)
 
    if #playableCards == 0 then
       -- We have no choices, so we pass the hand on.
@@ -268,8 +309,8 @@ function clearHeroAbilities(hero)
       
       if abilityToRemove ~= nil then
 	 local toRemove = abilityToRemove:GetAbilityName()
-	 
-	 if toRemove ~= "attribute_bound" then
+
+	 if toRemove ~= "attribute_bonus" then
 	    hero:RemoveAbility(toRemove)
 	 end
       end

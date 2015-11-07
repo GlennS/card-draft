@@ -5,8 +5,12 @@
 }
 
 .title {
+    color: black;
+    font-size: 80;
     vertical-align: top;
     horizontal-align: right;
+    margin-top: 2%;
+    margin-right: 3%;
 }
 
 #timer {
@@ -15,6 +19,13 @@
     vertical-align: top;
     horizontal-align: middle;
     background-color: green;
+}
+
+#timer-text {
+    color: black;
+    font-size: 40;
+    vertical-align: middle;
+    horizontal-align: middle;
 }
 
 #cards {
@@ -31,7 +42,7 @@
 }
 
 .card {
-    background-color: grey;
+    background-color: #25383C;
     margin: 10px;
     flow-children: down;
     opacity: 0.9;
