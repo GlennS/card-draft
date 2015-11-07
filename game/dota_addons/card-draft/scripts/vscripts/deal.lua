@@ -1,3 +1,6 @@
+require("players")
+require("inputs")
+
 teams = {DOTA_TEAM_GOODGUYS, DOTA_TEAM_BADGUYS}
 
 -- Types and quantities of cards:
@@ -38,7 +41,7 @@ function deal()
    picksByPlayer = {}
    passToPlayer = {}
 
-   function dealCard(list, cardType)
+   local dealCard = function(list, cardType)
       -- Randomly pick from the list of ultimates.
       local i = math.random(#list)
       local dealt = list[i]
@@ -46,6 +49,22 @@ function deal()
       table.remove(list, i)
 
       return {type = cardType, name = dealt}
+   end
+
+   local dealStartingHand = function(playerId)
+      local hand = {}
+      local picks = {}
+      
+      handsByPlayer[playerId] = hand
+      picksByPlayer[playerId] = picks
+
+      for cardType, quantities in pairs(cardCounts) do
+	 picks[cardType] = {}
+	 
+	 for i = 1, quantities["deal"] do
+	    hand[cardType .. i] = dealCard(options[cardType], cardType)
+	 end
+      end
    end
 
    -- print("all abilities")
@@ -58,7 +77,10 @@ function deal()
 
    forEachPlayer(dealStartingHand)
    setupPassToPlayer()
-   CustomGameEventManager:RegisterListener("player-drafted-card", playerDraftedCard)
+   listenToPlayerEvent(
+      "player-drafted-card",
+      playerDraftedCard
+   )
    sendHandsToPlayers()
 end
 
@@ -80,7 +102,7 @@ function setupPassToPlayer()
 	       nextTeamNumber = 1
 	    end
 	    
-	    local nextTeam = teams[nextTeam]
+	    local nextTeam = teams[nextTeamNumber]
 
 	    -- If there are not enough players on the team, pass to the first player on the first team.
 	    if nextPlayerPosition > PlayerResource:GetPlayerCountForTeam(nextTeam) then
@@ -95,28 +117,12 @@ function setupPassToPlayer()
    end
 end
 
-function dealStartingHand(playerId)
-   local hand = {}
-   local picks = {}
-   
-   handsByPlayer[playerId] = hand
-   picksByPlayer[playerId] = picks
-
-   for cardType, quantities in pairs(cardCounts) do
-      picks[cardType] = []
-      
-      for i = 1, quantities["deal"] do
-	 hand[cardType .. i] = dealCard(options[cardType], cardType)
-      end
-   end
-end
-
 -- Finds the location of a card in the player's hand
 function cardInHand(playerId, card)
    local hand = handsByPlayer[playerId]
 
-   for i, cardInHand in pairs(hand) do
-      if cardInHand["type"] == card["type"] && cardInHand["name"] == card["name"] then
+   for i, handCard in pairs(hand) do
+      if handCard["type"] == card["type"] and handCard["name"] == card["name"] then
 	 return i
       end
    end
@@ -124,10 +130,24 @@ function cardInHand(playerId, card)
    return false
 end
 
+function listenToPlayerEvent(event, eventHandler)
+   CustomGameEventManager:RegisterListener(
+      event,
+      function(entityIndex, data)
+	 eventHandler(
+	    -- This is magically made available, yay.
+	    data["PlayerID"],
+	    data
+	 )
+      end
+   )
+end
+
 function playerDraftedCard(playerId, card)
    local cardHandIndex = cardInHand(playerId, card)
    if not cardInHandIndex then
       -- You're not allowed to pick that...
+      print("Player attempted to draft card which was not in their hand", playerId, card["name"])
       return
    end
 
@@ -135,6 +155,7 @@ function playerDraftedCard(playerId, card)
 
    if not playerCanPickCard(playerId, cardType) then
       -- You've already picked all of those you can have...
+      print("Player attempted to draft card of a type they have already filled", playerId, card["type"])
       return
    end
 
@@ -153,7 +174,7 @@ function playerDraftedCard(playerId, card)
    -- Check if this pick has ended the game.
    if not checkForEnd() then
       -- Otherwise, see if it's time to pass our hands on.
-      maybePassHands()
+      maybePickupNextHands()
    end
 end
 
@@ -208,47 +229,6 @@ function hasPicked(playerId)
    return #handsByPlayer[playerId] > 0
 end
 
--- Strictly speaking we could do this more efficienctly by halting as soon as we git a failure.
--- In practice, we don't care about performance in any of this code.
-function forAnyPlayer(predicate)
-   local accum = false
-   local doTest = function(playerId)
-      if predicate(playerId) then
-	 accum = true
-      end
-   end
-
-   forEachPlayer(doTest)
-
-   return accum
-end
-
--- Returns true if the predicate is true for all players.
-function forAllPlayers(predicate)
-   local accum = true
-   local doTest = function(playerId)
-      if not predicate(playerId) then
-	 accum = false
-      end
-   end
-   
-   return accum
-end
-
--- Execute a function for every player in the game.
-function forEachPlayer(f)
-   for _, team in ipairs(teams) do
-      local playerCount = PlayerResource:GetPlayerCountForTeam(team)
-
-      if playerCount ~= 0 then
-	 for i = 1, playerCount do
-	    local playerId = PlayerResource:GetNthPlayerIDOnTeam(team, i)
-	    f(playerId)
-	 end
-      end
-   end
-end
-
 function sendHandsToPlayers()
    forEachPlayer(sendHandToPlayer)
 end
@@ -259,80 +239,11 @@ function sendHandToPlayer(playerId)
    CustomGameEventManager:Send_ServerToPlayer(player, "player-passed-hand", handsByPlayer[playerId])
 end
 
--- TODO: we'd prefer not to have to distribute the npc_heroes.txt and npc_abilities.txt files ourselves - is there some better way?
-function loadHeroes()
-   -- Returns a list of all the heroes in Dota 2.
-   local heroes = LoadKeyValues("scripts/data/npc_heroes.txt")
-   forbiddenHeroes = {"npc_dota_hero_base", "Version"}
-   local heroNames = {}
-
-   for name, _ in pairs(heroes) do
-      local ok = true
-      for i, badName in ipairs(forbiddenHeroes) do
-	 if name == badName then
-	    ok = false
-	    break
-	 end
-      end
-
-      if ok then
-	 table.insert(heroNames, name)
-      end
-   end
-
-   return heroNames
-end
-
-function loadAbilities()
-   -- Returns a list of all the abilities in Dota 2, divided up by whether they are an ultimate or normal skill.
-   local normal = {}
-   local ultimates = {}
-
-   local abilities = LoadKeyValues("scripts/data/npc_abilities.txt")
-
-   for name, ability in pairs(abilities) do
-      if isPickableAbility(name, ability) then
-	 if (ability["AbilityType"] == "DOTA_ABILITY_TYPE_ULTIMATE") then
-	    table.insert(ultimates, name)
-	 else
-	    table.insert(normal, name)
-	 end
-      end
-   end
-
-   return {normal = normal, ultimates = ultimates}
-end
-
-function isPickableAbility(name, ability)
-   local forbiddenBehaviours = {"DOTA_ABILITY_BEHAVIOR_HIDDEN", "DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE", "DOTA_ABILITY_BEHAVIOR_ITEM"}
-   local forbiddenNames = {"Version", "ability_base"}
-
-   for _, forbidden in pairs(forbiddenNames) do
-      if (name == forbidden) then
-	 return false
-      end
-   end
-
-   local behaviour = ability["AbilityBehavior"]
-
-   if (behaviour == nil) then
-      return true
-   end
-
-   for _, forbidden in pairs(forbiddenBehaviours) do
-      if string.find(behaviour, forbidden) then
-	 return false
-      end
-   end
-   
-   return true
-end
-
 function selectHeroAndAbilities(playerId)
    local picks = picksByPlayer(playerId)
    local player = PlayerResource:GetPlayer(playerId)
 
-   CreateHeroForPlayer(picks["hero"], player)
+   CreateHeroForPlayer(picks["hero"][1], player)
 
    local hero = player:GetAssignedHero()
 
@@ -348,7 +259,7 @@ function selectHeroAndAbilities(playerId)
       hero.addAbility(ability)
    end
 
-   hero.addAbility(picks["ultimate"])
+   hero.addAbility(picks["ultimate"][1])
 
    -- TODO: add sub-abilities
 end
