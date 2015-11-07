@@ -135,8 +135,6 @@ function cardInHand(playerId, card)
    return nil
 end
 
-
-
 function playerDraftedCard(playerId, card)
    local cardInHandIndex = cardInHand(playerId, card)
    if cardInHandIndex == nil then
@@ -164,6 +162,10 @@ function playerDraftedCard(playerId, card)
    -- Pass our hand to the next player, and take ours away so we can't pick from it again.
    nextHandsByPlayer[passToPlayer[playerId]] = hand
    handsByPlayer[playerId] = {}
+
+   -- Send an event back to the player to confirm their choice (this is mainly useful for when we are forcing an automatic or random choice).
+   local player = PlayerResource:GetPlayer(playerId)
+   CustomGameEventManager:Send_ServerToPlayer(player, "player-pick-confirmed", card)
 
    -- Check if this pick has ended the game.
    if not checkForEnd() then
@@ -225,6 +227,34 @@ end
 
 function sendHandsToPlayers()
    forEachPlayer(sendHandToPlayer)
+   forEachPlayer(testForAutomaticPlay)
+end
+
+function testForAutomaticPlay(playerId)
+   playableCards = getPlayableCards(playerId)
+
+   if #playableCards == 0 then
+      -- We have no choices, so we pass the hand on.
+      nextHandsByPlayer[passToPlayer[playerId]] = handsByPlayer[playerId]
+      handsByPlayer[playerId] = {}
+      
+   elseif #playableCards == 1 then
+      -- We've only got one choice: force it.
+      playerDraftedCard(playerId, playableCards[1])
+   end
+end
+
+function getPlayableCards(playerId)
+   local hand = handsByPlayer[playerId]
+   local playable = {}
+
+   for _, card in ipairs(handsByPlayer[playerId]) do
+      if playerCanPickCard(playerId, card["type"]) then
+	 table.insert(playable, card)
+      end
+   end
+
+   return playable
 end
 
 function sendHandToPlayer(playerId)

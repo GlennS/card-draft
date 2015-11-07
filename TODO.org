@@ -128,18 +128,8 @@ https://developer.valvesoftware.com/wiki/VPK_File_Format
 
 
 * Plan
-** Hero picks
-Doesn't quite work
-
-can't remove the abilities. What are their indexes?
-
-** Random numbers
-There's this nonsense https://developer.valvesoftware.com/wiki/Random_number
-Or I could seed it from Javascript?
-
-** Automatic plays and passes
-
 ** Timer and random plays
+
 
 ** English Localization
 Custom game name should appear in the right place.
@@ -153,4 +143,7 @@ Unhappy because not unicode? But it clearly is...
  4. throw_snowball, firework, healing_campfire, throw_coal
  5. probably remove invoker entirely?
 
+
+** Styling
+ 1. Put the abilities in order
 * Future Plans

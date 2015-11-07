@@ -1,6 +1,6 @@
 "use strict";
 
-/*global $*/
+/*global $, GameEvents*/
 
 (function() {
     var ability = "ability",
@@ -65,43 +65,64 @@
 	    hero: [],
 	    ultimate: [],
 	    ability: []
-	};
+	},
 
-    var showHand = function(hand) {
-	// Remove last round's cards.
-	cardsContainer.RemoveAndDeleteChildren();
-	
-	var cardElements = [];
+	cardElements = [],
 
-	// Add each card in our new hand.
-	Object.keys(hand).forEach(function(k) {
-	    var card = hand[k];
-
-	    var cardEl = $.CreatePanel("Button", cardsContainer, "");
-	    cardEl.AddClass("card");
-	    cardEl.AddClass(card.type + "-card");
-	    cardEl.enabled = isAvailable(card);
-
-	    cardElements.push(cardEl);
-
-	    cardEl.SetPanelEvent("onactivate", function() {
-		/*
-		  Can only activate one card from each hand.
-		*/
-		cardElements.forEach(function(otherCardEl) {
-		    otherCardEl.enabled = false;
-		});
-
-		pick(card);		
-	    });
+	showHand = function(hand) {
+	    // Remove last round's cards.
+	    cardsContainer.RemoveAndDeleteChildren();
 	    
-	    var image = imageTypes[card.type](cardEl, card.name);
-	});
-    },
+	    // Add each card in our new hand.
+	    Object.keys(hand).forEach(function(k) {
+		var card = hand[k];
+
+		var cardEl = $.CreatePanel("Button", cardsContainer, "");
+		cardEl.AddClass("card");
+		cardEl.AddClass(card.type + "-card");
+		cardEl.AddClass(card.name);
+		cardEl.enabled = isAvailable(card);
+
+		cardElements.push(cardEl);
+
+		cardEl.SetPanelEvent("onactivate", function() {
+		    pick(card);		
+		});
+		
+		var image = imageTypes[card.type](cardEl, card.name);
+	    });
+	},
 
 	pick = function(card) {
 	    // Tell the server what we want.
 	    GameEvents.SendCustomGameEventToServer("player-drafted-card", card);
+
+	    updateUIToReflectPick(card);
+	},
+
+	alreadyPicked = function(card) {
+	    var sawCard = false;
+	    
+	    picked[card["type"]].forEach(function(pick) {
+		if (card["name"] == pick["name"]) {
+		    sawCard = true;
+		}
+	    });
+
+	    return sawCard;
+	},
+
+	updateUIToReflectPick = function(card) {
+	    if (alreadyPicked(card)) {
+		return;
+	    }
+
+	    /*
+	     Prevent activating any further cards from that hand.
+	     */
+	    cardElements.forEach(function(otherCardEl) {
+		otherCardEl.enabled = false;
+	    });
 
 	    // Keep a record of what we chose.
 	    picked[card.type].push(card);
@@ -121,7 +142,10 @@
 	};
 
     GameEvents.Subscribe("player-passed-hand", showHand);
+    
+    // Listen for new pick events (in case we were forced to pick a card because we ran out of time, or it was the only option).
+    GameEvents.Subscribe("player-pick-confirmed", updateUIToReflectPick);
+
     GameEvents.SendCustomGameEventToServer("panorama-js-ready", {});
     // TODO: timer
-    // TODO: listen for new pick events (in case we randomed).
 }());
