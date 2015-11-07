@@ -1,7 +1,12 @@
 .draft-container {
     width: 100%;
     height: 100%;
-    background-color: pink;
+    background-color: darkgrey;
+}
+
+.title {
+    vertical-align: top;
+    horizontal-align: right;
 }
 
 #timer {

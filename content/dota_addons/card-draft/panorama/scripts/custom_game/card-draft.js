@@ -26,12 +26,6 @@
 	    ability: 3
 	},
 
-	abilityTooltip = function(el, name) {
-	    return function() {
-
-	    };
-	},
-
 	abilityImage = function(parent, name) {
 	    var el = $.CreatePanel("DOTAAbilityImage", parent, "");
 	    el.abilityname = name;
@@ -68,8 +62,8 @@
 	},
 
 	picked = {
-	    hero: null,
-	    ultimate: null,
+	    hero: [],
+	    ultimate: [],
 	    ability: []
 	};
 
@@ -80,7 +74,9 @@
 	var cardElements = [];
 
 	// Add each card in our new hand.
-	hand.forEach(function(card) {
+	Object.keys(hand).forEach(function(k) {
+	    var card = hand[k];
+
 	    var cardEl = $.CreatePanel("Button", cardsContainer, "");
 	    cardEl.AddClass("card");
 	    cardEl.AddClass(card.type + "-card");
@@ -90,8 +86,8 @@
 
 	    cardEl.SetPanelEvent("onactivate", function() {
 		/*
-		 Can only activate one card from each hand.
-		 */
+		  Can only activate one card from each hand.
+		*/
 		cardElements.forEach(function(otherCardEl) {
 		    otherCardEl.enabled = false;
 		});
@@ -107,6 +103,9 @@
 	    // Tell the server what we want.
 	    GameEvents.SendCustomGameEventToServer("player-drafted-card", card);
 
+	    // Keep a record of what we chose.
+	    picked[card.type].push(card);
+
 	    // Display the pick to the player.
 	    imageTypes[card.type](picksContainer, card.name);
 	},
@@ -115,21 +114,14 @@
 	    var needed = limits[card.type];
 
 	    if (picked[card.type]) {
-		var len = picked[card.type].length;
-		
-		if (len) {
-		    needed -= len;
-		    
-		} else {
-		    needed -= 1;
-		}
+		needed -= picked[card.type].length;
 	    }
 
 	    return needed > 0;
 	};
 
-    showHand(dummyHand);
     GameEvents.Subscribe("player-passed-hand", showHand);
+    GameEvents.SendCustomGameEventToServer("panorama-js-ready", {});
     // TODO: timer
     // TODO: listen for new pick events (in case we randomed).
 }());

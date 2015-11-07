@@ -128,15 +128,14 @@ https://developer.valvesoftware.com/wiki/VPK_File_Format
 
 
 * Plan
-** Plumbing
- 1. Fire event when a person selects a card.
- 2. The JavaScript isn't getting our event - are we listening too late / firing too early?
+** Hero picks
+Doesn't quite work
 
-** Pass cards around after players all made their choice
-This should work? Test it.
+can't remove the abilities. What are their indexes?
 
-** Modularize
-There's loads of stuff in the same file. Break it up.
+** Random numbers
+There's this nonsense https://developer.valvesoftware.com/wiki/Random_number
+Or I could seed it from Javascript?
 
 ** Automatic plays and passes
 

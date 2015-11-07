@@ -1,4 +1,5 @@
 require("players")
+require("events")
 require("inputs")
 
 teams = {DOTA_TEAM_GOODGUYS, DOTA_TEAM_BADGUYS}
@@ -23,7 +24,7 @@ cardCounts = {
 
 function deal()
    print("Entering Card Draft deal phase")
-   
+
    -- Pause to prevent standard hero picking from happening.
    PauseGame(true)
 
@@ -43,7 +44,7 @@ function deal()
 
    local dealCard = function(list, cardType)
       -- Randomly pick from the list of ultimates.
-      local i = math.random(#list)
+      local i = RandomInt(1, #list)
       local dealt = list[i]
 
       table.remove(list, i)
@@ -62,11 +63,15 @@ function deal()
 	 picks[cardType] = {}
 	 
 	 for i = 1, quantities["deal"] do
-	    hand[cardType .. i] = dealCard(options[cardType], cardType)
+	    table.insert(
+	       hand,
+	       dealCard(options[cardType], cardType)
+	    )
 	 end
       end
    end
 
+   -- TODO: remove all this dead code once I'm sure I've filtered abilities correctly.
    -- print("all abilities")
    -- for i, ability in ipairs(normalAbilities) do
    --    print(i, ability)
@@ -81,7 +86,7 @@ function deal()
       "player-drafted-card",
       playerDraftedCard
    )
-   sendHandsToPlayers()
+   waitForAllPlayers(sendHandsToPlayers)
 end
 
 -- Decide which player we'll pass our hand to.
@@ -127,25 +132,14 @@ function cardInHand(playerId, card)
       end
    end
 
-   return false
+   return nil
 end
 
-function listenToPlayerEvent(event, eventHandler)
-   CustomGameEventManager:RegisterListener(
-      event,
-      function(entityIndex, data)
-	 eventHandler(
-	    -- This is magically made available, yay.
-	    data["PlayerID"],
-	    data
-	 )
-      end
-   )
-end
+
 
 function playerDraftedCard(playerId, card)
-   local cardHandIndex = cardInHand(playerId, card)
-   if not cardInHandIndex then
+   local cardInHandIndex = cardInHand(playerId, card)
+   if cardInHandIndex == nil then
       -- You're not allowed to pick that...
       print("Player attempted to draft card which was not in their hand", playerId, card["name"])
       return
@@ -168,7 +162,7 @@ function playerDraftedCard(playerId, card)
    table.remove(hand, cardInHandIndex)
 
    -- Pass our hand to the next player, and take ours away so we can't pick from it again.
-   nextHandsByPlayer[passToPlayer(playerId)] = hand
+   nextHandsByPlayer[passToPlayer[playerId]] = hand
    handsByPlayer[playerId] = {}
 
    -- Check if this pick has ended the game.
@@ -183,7 +177,7 @@ function playerCanPickCard(playerId, cardType)
    local pickedSoFar = picksByPlayer[playerId][cardType]
    local numberAllowed = cardCounts[cardType]["pick"]
 
-   return #picksSoFar < numberAllowed
+   return #pickedSoFar < numberAllowed
 end
 
 -- True if the player can still pick at least one type of card.
@@ -234,32 +228,40 @@ function sendHandsToPlayers()
 end
 
 function sendHandToPlayer(playerId)
-   print("sending to player", playerId)
    local player = PlayerResource:GetPlayer(playerId)
    CustomGameEventManager:Send_ServerToPlayer(player, "player-passed-hand", handsByPlayer[playerId])
 end
 
+function clearHeroAbilities(hero)
+   for i = 0, hero:GetAbilityCount() do
+      local abilityToRemove = hero:GetAbilityByIndex(i)
+      
+      if abilityToRemove ~= nil then
+	 local toRemove = abilityToRemove:GetAbilityName()
+	 
+	 if toRemove ~= "attribute_bound" then
+	    hero:RemoveAbility(toRemove)
+	 end
+      end
+   end
+end
+
 function selectHeroAndAbilities(playerId)
-   local picks = picksByPlayer(playerId)
+   local picks = picksByPlayer[playerId]
    local player = PlayerResource:GetPlayer(playerId)
 
    CreateHeroForPlayer(picks["hero"][1], player)
 
    local hero = player:GetAssignedHero()
 
-   -- Remove the player's default abilities.
-   while hero.GetAbilityCount() > 0 do
-      hero.removeAbility(
-	 hero.getAbilityByIndex(1):GetAbilityName()
-      )
-   end
+   clearHeroAbilities(hero)
 
    -- Add the custom abilities they picked.
    for _, ability in ipairs(picks["ability"]) do
-      hero.addAbility(ability)
+      hero:AddAbility(ability)
    end
 
-   hero.addAbility(picks["ultimate"][1])
+   hero:AddAbility(picks["ultimate"][1])
 
    -- TODO: add sub-abilities
 end
