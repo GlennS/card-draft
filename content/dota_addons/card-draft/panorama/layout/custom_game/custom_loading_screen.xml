@@ -1,0 +1,7 @@
+<root>
+  <styles>
+    <include src="file://{resources}/styles/custom_game/loading-screen.css" />
+  </styles>
+  
+  <Panel class="loading-screen" />
+</root>

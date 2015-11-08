@@ -1,7 +1,7 @@
 .draft-container {
     width: 100%;
     height: 100%;
-    background-color: darkgrey;
+    background-image: url("file://{images}/draft-background-image.jpg");
 }
 
 .title {
@@ -32,6 +32,8 @@
     vertical-align: middle;
     horizontal-align: middle;
     flow-children: right;
+    margin: 10px;
+    background-color: #34282C;
 }
 
 #confirmed-picks {
@@ -42,7 +44,6 @@
 }
 
 .card {
-    background-color: #25383C;
     margin: 10px;
     flow-children: down;
     opacity: 0.9;
