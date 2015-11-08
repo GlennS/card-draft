@@ -1,149 +1,18 @@
-* Learn about Scripting
-[[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Scripting][Dota 2 Scripting]]
-[[http://www.lua.org/manual/5.3/][Lua Reference]]
+* Bugs
+Background image doesn't work. 
+CompileImages: Failed to find CONTENT image file "panorama/images/draft-background-image.png"
 
-Lua things may go in /game. Must other stuff in /game is not helpful.
+* Publish
 
-[[https://github.com/Lattyware/itemdraft][item draft]] is a good example.
-
-** Client-Server communications
-There are [[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Custom_Game_Events][Custom Game Events]], which can be used from Lua with the =CustomGameEventManager=. You can subscribe to these on the client.
-
-[[https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Custom_Nettables][Custom Net Tables]] stores key-value pairs. They send events to the client when a key changes.
-
-** What runs where?
-There is Lua on both client and server.
-script_attach_debugger cl_script_attach_debugger
-
-Vconsole2 is what runs in the workshop tools. What does it have access to?
-
-** Panorama
-This is an XML/CSS/JS UI framework.
-
-Panels are elements.
-
-*** Layout
-
-#+BEGIN_SRC xml
-  <DOTAItemImage itemname="item_clarity" />
-
-  <DOTAHeroImage heroid="5" />
-  <DOTAHeroImage heroname="npc_dota_hero_nevermore" />
-  <DOTAHeroImage heroname="npc_dota_hero_pudge" heroimagestyle="portrait" />
-
-  <DOTAAvatarImage steamid="-1" />
-  <DOTAUserName steamid="-1" />
-
-  <Button onactivate="" />
-  <RadioButton checked="checked" group="Demo" id="Demo1" text="Radio button 1"/>
-  <Image src="file://{images}/custom_game/thing.png"/>
-  <Label text="My label text"/>
-#+END_SRC
-
-*** Style
-=flow-children= deterines if layout if across or down. Options are: /down/, /right/, /down-wrap/, /right-wrap/, /none/.
-
-=horizontal-align= and =vertical-align= allow positioning.
-
-=x= and =y= allow really precise positioning.
-
-=transform= exists.
-
-*** Localization
-game/dota_addons/card-draft/panorama/localization/addon_en.txt
-
-Refer to messages using text="#message"
-
-You can also do it in JavaScript:
-#+BEGIN_SRC js2
-  $.Localize("#LocalizationToken");
-#+END_SRC
-
-*** Javascript
-There's a =$= thing which can select one panel at a time =$('#SomePanel')=.
-
-=$.Msg()= logs things.
-
-Example of creating a new panel with some XML:
-#+BEGIN_SRC js2
-  var parentPanel = $.ContextPanel(); // the root panel of the current XML context
-  var newChildPanel = $.CreatePanel( "Panel", parentPanel, "ChildPanelID" );
-  newChildPanel.BLoadLayout( "file://{resources}/layout/custom_game/new_panel.xml", false, false );
-#+END_SRC
-
-=panel.style.property= gets CSS things.
-
-** Libraries
-Considering using the Barebones timers library?
-
-** Empty Abilities
-Found in [[https://github.com/Lattyware/itemdraft/blob/master/game/dota_addons/itemdraft/scripts/npc/npc_heroes_custom.txt][npc_heroes_custom.txt]]:
-
-(Why these?)
-
-"Ability1"         "invoker_empty1"
-"Ability2"         "invoker_empty2"
-"Ability3"         "doom_bringer_empty1"
-"Ability4"         "doom_bringer_empty2"
-"Ability5"         "wisp_empty1"
-"Ability6"         "wisp_empty2"
-
-** Localization
-game\dota_addons\card_draft\resource\addon_english.txt
-game\dota_addons\card_draft\panorama\localization\addon_english.txt (does this come from content originally?)
-
-failed to load file "resource/addon_english.txt".
-
-** addon_game_mode.lua
-require other files.
-
-GameMode:InitGameMode()
-
-** vscripts/gamemode.lua
-Provides some hooks:
-
-=GameRules:EnableCustomGameSetupAutoLaunch(false)= iniside InitGameMode
-
-=function GameMode:OnAllPlayersLoaded()= for hero selection
-
-=GameMode:OnHeroInGame(hero)= first spawn - can change abilities here?
-
-
-** Key-Value Files
-https://developer.valvesoftware.com/wiki/KeyValues
-
-Lua has a LoadKeyValues function.
-
-Can include using: #base "file path"
-
-// These are comments.
-
-npc_heroes.txt
-npc_abilities.txt
-
-(They're in the vpk?)
-
-** VPK file format
-https://developer.valvesoftware.com/wiki/VPK_File_Format
-
-
-* Make it work
-** Tidy up which abilities and heroes are available
- 1. sub-abilities
- 2. empty/hidden
- 3. non-hero abilities (creeps, roshan, greevils, cny, courier)
- 4. throw_snowball, firework, healing_campfire, throw_coal
- 5. probably remove invoker entirely?
- 6. Test deward
-
-** Basic Styling
- 1. Put the abilities in order
- 2. some transitions?
-
-
-
-** Publish
+* Playtesting
+ 1. Does deward still work?
+ 2. Do sub-abilities work?
+ 3. Do any other abilities fail?
 
 * Styling
+Generally it looks quite ugly at present.
+
+Should we have some transition to indicate who you're passing your cards to?
 
 * Audio
+Perhaps we should have some sounds to indicate you've picked?

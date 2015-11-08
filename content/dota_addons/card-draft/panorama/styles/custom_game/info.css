@@ -1,0 +1,10 @@
+.gameinfo {
+    font-size: 25;
+    color: #307D7E;
+    flow-children: down;
+}
+
+.gameinfo a {
+    text-decoration: underline;
+    color: blue;
+}

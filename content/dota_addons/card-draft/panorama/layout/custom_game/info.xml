@@ -1,0 +1,12 @@
+<!--
+    Instructions for players.
+-->
+<root>
+  <styles>
+    <include src="file://{resources}/styles/custom_game/info.css" />
+  </styles>
+  <Panel class="gameinfo">
+    <Label html="false" text="#addon-description" />
+    <Label html="true" text="#addon-source" />
+  </Panel>
+</root>

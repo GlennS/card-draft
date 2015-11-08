@@ -1,6 +1,11 @@
 <root>
   <Panel>
     <CustomUIElement
+	type="GameInfo"
+	layoutfile="file://{resources}/layout/custom_game/info.xml"
+	/>
+    
+    <CustomUIElement
 	type="HeroSelection"
 	layoutfile="file://{resources}/layout/custom_game/card-draft.xml"
 	/>
