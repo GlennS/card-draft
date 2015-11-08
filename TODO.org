@@ -1,9 +1,3 @@
-* Bugs
-Background image doesn't work. 
-CompileImages: Failed to find CONTENT image file "panorama/images/draft-background-image.png"
-
-* Publish
-
 * Playtesting
  1. Does deward still work?
  2. Do sub-abilities work?
