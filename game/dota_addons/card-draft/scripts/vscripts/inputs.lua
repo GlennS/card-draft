@@ -86,9 +86,6 @@ end
 
 -- See http://lua-users.org/wiki/StringRecipes
 function string.starts(str, start)
-   print("string.starts", str, start, string.sub(
-      str, 1, string.len(start)
-						) == start)
    return string.sub(
       str, 1, string.len(start)
    ) == start
