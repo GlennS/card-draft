@@ -58,13 +58,18 @@
 }
 
 .ability-card {
-    border: 1px solid green;
+    border: 3px solid green;
 }
 
 .ultimate-card {
-    border: 1px solid blue;
+    border: 3px solid blue;
 }
 
 .hero-card {
-    border: 1px solid red;
+    border: 3px solid red;
+}
+
+DOTAHeroImage {
+    height: 130px;
+    width: 90px;
 }
