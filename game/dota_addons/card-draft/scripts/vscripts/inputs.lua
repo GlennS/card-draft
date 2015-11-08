@@ -2,7 +2,7 @@
 function loadHeroes()
    -- Returns a list of all the heroes in Dota 2.
    local heroes = LoadKeyValues("scripts/data/npc_heroes.txt")
-   forbiddenHeroes = {"npc_dota_hero_base", "Version", "npc_dota_hero_invoker"}
+   forbiddenHeroes = {"npc_dota_hero_base", "Version", "npc_dota_hero_invoker", "npc_dota_hero_abyssal_underlord"}
    local heroNames = {}
 
    for name, _ in pairs(heroes) do
