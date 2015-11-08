@@ -2,7 +2,7 @@
 function loadHeroes()
    -- Returns a list of all the heroes in Dota 2.
    local heroes = LoadKeyValues("scripts/data/npc_heroes.txt")
-   forbiddenHeroes = {"npc_dota_hero_base", "Version"}
+   forbiddenHeroes = {"npc_dota_hero_base", "Version", "npc_dota_hero_invoker"}
    local heroNames = {}
 
    for name, _ in pairs(heroes) do
@@ -22,7 +22,7 @@ function loadHeroes()
    return heroNames
 end
 
-function loadAbilities()
+function loadAbilities(heroNames)
    -- Returns a list of all the abilities in Dota 2, divided up by whether they are an ultimate or normal skill.
    local normal = {}
    local ultimates = {}
@@ -30,7 +30,7 @@ function loadAbilities()
    local abilities = LoadKeyValues("scripts/data/npc_abilities.txt")
 
    for name, ability in pairs(abilities) do
-      if isPickableAbility(name, ability) then
+      if isPickableAbility(name, ability) and isHeroAbility(name, heroNames) then
 	 if (ability["AbilityType"] == "DOTA_ABILITY_TYPE_ULTIMATE") then
 	    table.insert(ultimates, name)
 	 else
@@ -65,4 +65,31 @@ function isPickableAbility(name, ability)
    end
    
    return true
+end
+
+local heroNamePrefix = "npc_dota_hero_"
+local heroNamePrefixLength = string.len(heroNamePrefix)
+
+-- Tests whether an ability belongs to a hero.
+-- Does this by checking whether it contains that hero's name.
+function isHeroAbility(abilityName, heroNames)
+   for _, heroName in ipairs(heroNames) do
+      heroName = string.sub(heroName, heroNamePrefixLength + 1)
+      
+      if string.starts(abilityName, heroName) then
+	 return true
+      end
+   end
+
+   return false
+end
+
+-- See http://lua-users.org/wiki/StringRecipes
+function string.starts(str, start)
+   print("string.starts", str, start, string.sub(
+      str, 1, string.len(start)
+						) == start)
+   return string.sub(
+      str, 1, string.len(start)
+   ) == start
 end

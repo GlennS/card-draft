@@ -34,7 +34,7 @@ function deal()
 
    -- Load all possible options.
    local allHeroes = loadHeroes()
-   local allAbilities = loadAbilities()
+   local allAbilities = loadAbilities(allHeroes)
    local options = {
       hero = loadHeroes(),
       ability = allAbilities["normal"],
