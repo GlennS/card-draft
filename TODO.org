@@ -128,13 +128,6 @@ https://developer.valvesoftware.com/wiki/VPK_File_Format
 
 
 * Make it work
-** English Localization
-Custom game name should appear in the right place.
-
-Unhappy because not unicode? But it clearly is...
-
-Is the timer going too quickly?
-
 ** Tidy up which abilities and heroes are available
  1. sub-abilities
  2. empty/hidden

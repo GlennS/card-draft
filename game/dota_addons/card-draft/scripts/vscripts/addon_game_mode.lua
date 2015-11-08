@@ -16,9 +16,6 @@ end
 
 function CardDraftGameMode:InitGameMode()
    ListenToGameEvent("game_rules_state_change", self.StateChange, nil)
-
-   -- While I'm developing.
-   GameRules:SetCustomGameSetupAutoLaunchDelay(3);
 end
 
 function CardDraftGameMode:StateChange()
