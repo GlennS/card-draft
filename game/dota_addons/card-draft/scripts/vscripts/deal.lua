@@ -231,7 +231,7 @@ function pickupHand(playerId)
 end
 
 function hasPicked(playerId)
-   return #handsByPlayer[playerId] > 0
+   return #handsByPlayer[playerId] == 0
 end
 
 function sendHandsToPlayers()
