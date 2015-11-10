@@ -21,6 +21,8 @@ function forAllPlayers(predicate)
 	 accum = false
       end
    end
+
+   forEachPlayer(doTest)
    
    return accum
 end
