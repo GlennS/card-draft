@@ -63,6 +63,24 @@ Run the [[file:install.sh][install.sh file]] to copy your files into the right p
 
 Launch the workshop tools, open the console, and run =dota_launch_custom_game card-draft dota=.
 
+*** Testing on Development Machines
+To test we may wish to add some bots. Modify addon_game_mode.lua to include the following:
+=require("lib/timers")=
+
+And this inside the =CardDraftGameMode:StateChange= function:
+
+#+BEGIN_SRC lua
+  if GameRules:State_Get() == DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP then
+     -- TODO: for testing only, remove this.
+     Timers:CreateTimer(
+        2,
+        function()
+           SendToServerConsole("dota_create_fake_clients")
+        end
+     )
+  end
+#+END_SRC
+
 ** Credits
 Developed by [[https://github.com/GlennS][Glenn Searby]].
 
