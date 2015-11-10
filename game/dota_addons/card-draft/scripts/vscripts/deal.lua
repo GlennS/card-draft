@@ -75,15 +75,6 @@ function deal()
       end
    end
 
-   -- TODO: remove all this dead code once I'm sure I've filtered abilities correctly.
-   -- print("all abilities")
-   -- for i, ability in ipairs(normalAbilities) do
-   --    print(i, ability)
-   -- end
-   -- for i, ability in ipairs(ultimates) do
-   --    print(i, ability)
-   -- end
-
    forEachPlayer(dealStartingHand)
    setupPassToPlayer()
    listenToPlayerEvent(
