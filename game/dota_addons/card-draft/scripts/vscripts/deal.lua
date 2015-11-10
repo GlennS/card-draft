@@ -5,6 +5,8 @@ require("lib/timers")
 
 teams = {DOTA_TEAM_GOODGUYS, DOTA_TEAM_BADGUYS}
 
+cardDraftFinished = false
+
 roundTime = 15
 timeRemaining = roundTime
 
@@ -193,6 +195,8 @@ function checkForEnd()
       -- Assign all players the heroes and abilities they chose.
       forEachPlayer(selectHeroAndAbilities)
 
+      cardDraftFinished = true
+
       -- Good luck, have fun.
       PauseGame(false)
 
@@ -233,6 +237,10 @@ function sendHandsToPlayers()
 end
 
 function notifyPlayersOfTimeRemaining()
+   if cardDraftFinished then
+      return false
+   end
+   
    timeRemaining = timeRemaining - 1
    CustomGameEventManager:Send_ServerToAllClients("round-timer-count", {time = timeRemaining})
    if timeRemaining <= 0 then
