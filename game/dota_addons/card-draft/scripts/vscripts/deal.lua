@@ -228,6 +228,8 @@ function sendHandsToPlayers()
    timeRemaining = roundTime
    forEachPlayer(sendHandToPlayer)
    forEachPlayer(testForAutomaticPlay)
+   -- If no-one can play, move on straightaway.
+   maybeNextRound()
 end
 
 function notifyPlayersOfTimeRemaining()
