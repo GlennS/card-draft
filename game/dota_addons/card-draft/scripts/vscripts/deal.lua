@@ -163,11 +163,8 @@ function playerDraftedCard(playerId, card)
    local player = PlayerResource:GetPlayer(playerId)
    CustomGameEventManager:Send_ServerToPlayer(player, "player-pick-confirmed", card)
 
-   -- Check if this pick has ended the game.
-   if not checkForEnd() then
-      -- Otherwise, see if it's time to pass our hands on.
-      maybeNextRound()
-   end
+   -- See if it's time to pass our hands on.
+   maybeNextRound()
 end
 
 -- True if the player can still pick cards of this type.
@@ -207,8 +204,10 @@ end
 
 -- If all the players have picked a card (or been forced to pick a card, or to pass), move the hands around.
 function maybeNextRound()
-   if forAllPlayers(hasPicked) then
-      nextRound()
+   if not checkForEnd() then
+      if forAllPlayers(hasPicked) then
+	 nextRound()
+      end
    end
 end
 
