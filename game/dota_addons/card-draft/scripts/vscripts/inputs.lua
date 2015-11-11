@@ -44,7 +44,13 @@ end
 
 function isPickableAbility(name, ability)
    local forbiddenBehaviours = {"DOTA_ABILITY_BEHAVIOR_HIDDEN", "DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE", "DOTA_ABILITY_BEHAVIOR_ITEM"}
-   local forbiddenNames = {"Version", "ability_base"}
+   local forbiddenNames = {
+      "Version",
+      "ability_base",
+      "lone_druid_spirit_bear_return",
+      "lone_druid_spirit_bear_demolish",
+      "lone_druid_spirit_bear_entangle"
+   }
 
    for _, forbidden in pairs(forbiddenNames) do
       if (name == forbidden) then
