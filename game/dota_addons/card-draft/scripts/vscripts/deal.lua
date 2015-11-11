@@ -192,14 +192,14 @@ function checkForEnd()
    -- Check if all players have made all their picks.
    if not forAnyPlayer(playerCanPickAnything) then
 
+      PauseGame(false)
+      
       -- Assign all players the heroes and abilities they chose.
       forEachPlayer(selectHeroAndAbilities)
 
       cardDraftFinished = true
 
       -- Good luck, have fun.
-      PauseGame(false)
-
       return true
    else
       return false
