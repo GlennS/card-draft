@@ -50,7 +50,9 @@ function isPickableAbility(name, ability)
       "lone_druid_spirit_bear_return",
       "lone_druid_spirit_bear_demolish",
       "lone_druid_spirit_bear_entangle",
-      "ogre_magi_unrefined_fireblast"
+      "ogre_magi_unrefined_fireblast",
+      "morphling_morph_agi",
+      "morphling_morph_str"
    }
 
    for _, forbidden in pairs(forbiddenNames) do
