@@ -49,7 +49,8 @@ function isPickableAbility(name, ability)
       "ability_base",
       "lone_druid_spirit_bear_return",
       "lone_druid_spirit_bear_demolish",
-      "lone_druid_spirit_bear_entangle"
+      "lone_druid_spirit_bear_entangle",
+      "ogre_magi_unrefined_fireblast"
    }
 
    for _, forbidden in pairs(forbiddenNames) do
