@@ -1,12 +1,23 @@
-* Playtesting
- 1. Does deward still work?
- 2. Do sub-abilities work?
- 3. Do any other abilities fail?
+* Model Loading Problem
+Cosmetic items, special couriers and summoner units don't display properly.
+
+* Doesn't pass hand for players on the same team
+Keep iterating through.
+
+If we find no players in a whole numbered slot, then go back to slot 1.
+
+* Feedback on what you've picked
+ + Increase timer slightly.
+ + Make the rounds have a minimum time limit.
+ + Animations/transitions?
+ + Message to say 'you should pick'.
+ + Let the player know what they picked.
+
+* Layout Cards Differently
+A row each for things?
 
 * Styling
 Generally it looks quite ugly at present.
 
 Should we have some transition to indicate who you're passing your cards to?
 
-* Audio
-Perhaps we should have some sounds to indicate you've picked?
