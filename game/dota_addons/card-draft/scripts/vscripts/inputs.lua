@@ -2,7 +2,34 @@
 function loadHeroes()
    -- Returns a list of all the heroes in Dota 2.
    local heroes = LoadKeyValues("scripts/data/npc_heroes.txt")
-   forbiddenHeroes = {"npc_dota_hero_base", "Version", "npc_dota_hero_invoker", "npc_dota_hero_abyssal_underlord"}
+   -- See Unavailable Heroes in http://dota2.gamepedia.com/Game_modes#Ability_Draft
+   forbiddenHeroes = {
+      "npc_dota_hero_base",
+      "Version",
+      "npc_dota_hero_beastmaster",
+      "npc_dota_hero_chen",
+      "npc_dota_hero_doom_bringer",
+      "npc_dota_hero_earth_spirit",
+      "npc_dota_hero_ember_spirit",
+      "npc_dota_hero_keeper_of_the_light",
+      "npc_dota_hero_morphling",
+      "npc_dota_hero_phoenix",
+      "npc_dota_hero_puck",
+      "npc_dota_hero_rubick",
+      "npc_dota_hero_nevermore",
+      "npc_dota_hero_spectre",
+      "npc_dota_hero_shadow_demon",
+      "npc_dota_hero_techies",
+      "npc_dota_hero_templar_assassin",
+      "npc_dota_hero_shredder",
+      "npc_dota_hero_troll_warlord",
+      "npc_dota_hero_tusk",
+      "npc_dota_hero_invoker",
+      "npc_dota_hero_abyssal_underlord",
+      "npc_dota_hero_lone_druid",
+      "npc_dota_hero_ogre_magi",
+      "npc_dota_hero_meepo"
+   }
    local heroNames = {}
 
    for name, _ in pairs(heroes) do
@@ -47,12 +74,15 @@ function isPickableAbility(name, ability)
    local forbiddenNames = {
       "Version",
       "ability_base",
-      "lone_druid_spirit_bear_return",
-      "lone_druid_spirit_bear_demolish",
-      "lone_druid_spirit_bear_entangle",
-      "ogre_magi_unrefined_fireblast",
-      "morphling_morph_agi",
-      "morphling_morph_str"
+      "brewmaster_earth_hurl_boulder",
+      "brewmaster_earth_spell_immunity",
+      "brewmaster_earth_pulverize",
+      "brewmaster_storm_dispel_magic",
+      "brewmaster_storm_cyclone",
+      "brewmaster_storm_wind_walk",
+      "brewmaster_fire_permanent_immolation",
+      "lycan_summon_wolves_critical_strike",
+      "lycan_summon_wolves_invisibility"
    }
 
    for _, forbidden in pairs(forbiddenNames) do
