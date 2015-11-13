@@ -15,6 +15,7 @@ function Activate()
 end
 
 function CardDraftGameMode:InitGameMode()
+   GameRules:SetHeroSelectionTime(0)
    ListenToGameEvent("game_rules_state_change", self.StateChange, nil)
 end
 

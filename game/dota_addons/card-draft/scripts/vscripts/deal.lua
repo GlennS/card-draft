@@ -320,19 +320,24 @@ end
 function selectHeroAndAbilities(playerId)
    local picks = picksByPlayer[playerId]
    local player = PlayerResource:GetPlayer(playerId)
+   local heroName = picks["hero"][1]
 
-   CreateHeroForPlayer(picks["hero"][1], player)
+   PrecacheUnitByNameAsync(
+      heroName,
+      function()
+	 CreateHeroForPlayer(heroName, player)
+	 local hero = player:GetAssignedHero()
 
-   local hero = player:GetAssignedHero()
+	 clearHeroAbilities(hero)
 
-   clearHeroAbilities(hero)
+	 -- Add the custom abilities they picked.
+	 for _, ability in ipairs(picks["ability"]) do
+	    hero:AddAbility(ability)
+	 end
 
-   -- Add the custom abilities they picked.
-   for _, ability in ipairs(picks["ability"]) do
-      hero:AddAbility(ability)
-   end
-
-   hero:AddAbility(picks["ultimate"][1])
-
-   -- TODO: add sub-abilities
+	 hero:AddAbility(picks["ultimate"][1])
+	 
+	 -- TODO: add sub-abilities
+      end
+   )
 end
