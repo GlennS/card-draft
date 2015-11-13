@@ -22,5 +22,7 @@ end
 function CardDraftGameMode:StateChange()
    if GameRules:State_Get() == DOTA_GAMERULES_STATE_HERO_SELECTION then
       deal()
+   elseif GameRules:State_Get() == DOTA_GAMERULES_STATE_PRE_GAME then
+      assignAllHeroes()
    end
 end

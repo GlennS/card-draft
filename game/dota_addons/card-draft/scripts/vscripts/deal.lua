@@ -194,9 +194,6 @@ function checkForEnd()
 
       PauseGame(false)
       
-      -- Assign all players the heroes and abilities they chose.
-      forEachPlayer(selectHeroAndAbilities)
-
       cardDraftFinished = true
 
       -- Good luck, have fun.
@@ -315,6 +312,11 @@ function clearHeroAbilities(hero)
 	 end
       end
    end
+end
+
+function assignAllHeroes()
+   -- Assign all players the heroes and abilities they chose.
+   forEachPlayer(selectHeroAndAbilities)
 end
 
 function selectHeroAndAbilities(playerId)
