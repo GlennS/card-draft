@@ -82,7 +82,9 @@ function isPickableAbility(name, ability)
       "brewmaster_storm_wind_walk",
       "brewmaster_fire_permanent_immolation",
       "lycan_summon_wolves_critical_strike",
-      "lycan_summon_wolves_invisibility"
+      "lycan_summon_wolves_invisibility",
+      "warlock_golem_flaming_fists",
+      "warlock_golem_permanent_immolation"
    }
 
    for _, forbidden in pairs(forbiddenNames) do
