@@ -10,6 +10,8 @@ cardDraftFinished = false
 roundTime = 15
 timeRemaining = roundTime
 
+maxPlayersInTeam = 5
+
 -- Types and quantities of cards:
 --- Dealt in initial hand
 --- Which can be picked by the player over all hands
@@ -89,35 +91,34 @@ end
 
 -- Decide which player we'll pass our hand to.
 function setupPassToPlayer()
-   for teamNumber, team in ipairs(teams) do
-      local playerCount = PlayerResource:GetPlayerCountForTeam(team)
+   local firstPlayerId = nil
+   local playerId = nil
+   local nextPlayerId = nil
 
-      if playerCount ~= 0 then
-	 for i = 1, playerCount do
-	    -- Try to pass to the player with the same number on the next team
-	    local playerId = PlayerResource:GetNthPlayerIDOnTeam(team, i)
-	    local nextPlayerPosition = i
-	    local nextTeamNumber = (teamNumber + 1)
+   -- Iterate through by team and player number.
+   -- Each player will pass to the next player in this iteration.
+   for i = 1, maxPlayersInTeam do
+      for teamNumber, team in ipairs(teams) do
+	 local playerCount = PlayerResource:GetPlayerCountForTeam(team)
 
-	    -- If there are no more teams, try to pass to the player with the next number on the first team.
-	    if nextTeamNumber > #teams then
-	       nextPlayerPosition = nextPlayerPosition + 1
-	       nextTeamNumber = 1
-	    end
-	    
-	    local nextTeam = teams[nextTeamNumber]
+	 if i <= playerCount then
+	    local nextPlayerId = PlayerResource:GetNthPlayerIDOnTeam(team, i)
 
-	    -- If there are not enough players on the team, pass to the first player on the first team.
-	    if nextPlayerPosition > PlayerResource:GetPlayerCountForTeam(nextTeam) then
-	       nextPlayerPosition = 1
-	       nextTeamNumber = 1
-	       nextTeam = teams[nextTeamNumber]
+	    if firstPlayerId == nil then
+	       firstPlayerId = nextPlayerId
 	    end
 
-	    passToPlayer[playerId] = PlayerResource:GetNthPlayerIDOnTeam(nextTeam, nextPlayerPosition)
+	    if playerId ~= nil then
+	       passToPlayer[playerId] = nextPlayerId
+	    end
+
+	    playerId = nextPlayerId
 	 end
       end
    end
+
+   -- Close the circle
+   passToPlayer[playerId] = firstPlayerId
 end
 
 -- Finds the location of a card in the player's hand
