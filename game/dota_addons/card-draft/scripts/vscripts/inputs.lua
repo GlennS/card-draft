@@ -74,6 +74,7 @@ function isPickableAbility(name, ability)
    local forbiddenNames = {
       "Version",
       "ability_base",
+      -- Brewmaster primal split elemental abilities
       "brewmaster_earth_hurl_boulder",
       "brewmaster_earth_spell_immunity",
       "brewmaster_earth_pulverize",
@@ -81,10 +82,16 @@ function isPickableAbility(name, ability)
       "brewmaster_storm_cyclone",
       "brewmaster_storm_wind_walk",
       "brewmaster_fire_permanent_immolation",
+      -- Lycan's wolves' abilities
       "lycan_summon_wolves_critical_strike",
       "lycan_summon_wolves_invisibility",
+      -- Warlock's golem's abilities
       "warlock_golem_flaming_fists",
-      "warlock_golem_permanent_immolation"
+      "warlock_golem_permanent_immolation",
+      -- Transformed dragon knight ability
+      "dragon_knight_frost_breath",
+      -- This slipts though because it's prefixed by the hero name 'centaur'.
+      "centaur_khan_war_stomp"
    }
 
    for _, forbidden in pairs(forbiddenNames) do
