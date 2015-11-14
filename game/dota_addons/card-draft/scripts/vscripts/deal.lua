@@ -25,7 +25,7 @@ cardCounts = {
       pick = 1
    },
    hero = {
-      deal = 1,
+      deal = 2,
       pick = 1
    }
 }

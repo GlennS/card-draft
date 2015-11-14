@@ -32,9 +32,9 @@ Player order loops round, so the 10th player will pass their leftover cards to t
 
 *** Card Distribution
 The 7 initial cards dealt to each player are as follows:
- + 5 normal skills
- + 1 ultimate
- + 1 hero
+ + 4 normal skills
+ + 2 ultimates
+ + 2 heros
 
 *** Card Eligibility
 Sometimes players will receive cards which they cannot choose from. For example, they were passed a hero card, but they already have a hero. In those cases, the card will be greyed out and unclickable.
