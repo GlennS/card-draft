@@ -7,8 +7,12 @@ teams = {DOTA_TEAM_GOODGUYS, DOTA_TEAM_BADGUYS}
 
 cardDraftFinished = false
 
-roundTime = 15
-timeRemaining = roundTime
+-- Intermissions happen before each round, to allow players to see what they picked / were forced to pick etc.
+-- The new hand will be picked up at the end of the intermission.
+roundLength = 15
+roundTimeRemaining = roundLength
+intermissionLength = 3
+intermissionTimeRemaining = intermissionLength
 
 maxPlayersInTeam = 5
 
@@ -63,8 +67,9 @@ function deal()
    local dealStartingHand = function(playerId)
       local hand = {}
       local picks = {}
-      
-      handsByPlayer[playerId] = hand
+
+      handsByPlayer[playerId] = {}
+      nextHandsByPlayer[playerId] = hand
       picksByPlayer[playerId] = picks
 
       for cardType, quantities in pairs(cardCounts) do
@@ -166,8 +171,8 @@ function playerDraftedCard(playerId, card)
    local player = PlayerResource:GetPlayer(playerId)
    CustomGameEventManager:Send_ServerToPlayer(player, "player-pick-confirmed", card)
 
-   -- See if it's time to pass our hands on.
-   maybeNextRound()
+   -- See if it's time for the round to end.
+   maybeNextIntermission()
 end
 
 -- True if the player can still pick cards of this type.
@@ -205,17 +210,10 @@ function checkForEnd()
 end
 
 -- If all the players have picked a card (or been forced to pick a card, or to pass), move the hands around.
-function maybeNextRound()
-   if not checkForEnd() then
-      if forAllPlayers(hasPicked) then
-	 nextRound()
-      end
+function maybeNextIntermission()
+   if forAllPlayers(hasPicked) then
+      nextIntermission()
    end
-end
-
-function nextRound()
-   forEachPlayer(pickupHand)
-   sendHandsToPlayers()
 end
 
 function pickupHand(playerId)
@@ -227,24 +225,55 @@ function hasPicked(playerId)
 end
 
 function sendHandsToPlayers()
-   timeRemaining = roundTime
    forEachPlayer(sendHandToPlayer)
    forEachPlayer(testForAutomaticPlay)
-   -- If no-one can play, move on straightaway.
-   maybeNextRound()
+   -- If no-one can play, end the round immediately.
+   maybeNextIntermission()
+end
+
+function nextRound()
+   -- There might not be any more rounds, check that first.
+   if not checkForEnd() then
+      -- Intermission over. Give everyone their new hands and move back to the drafting phase.
+      intermissionTimeRemaining = nil
+      roundTimeRemaining = roundLength
+      forEachPlayer(pickupHand)
+      sendHandsToPlayers()
+   end
+end
+
+function nextIntermission()
+   -- Round over. Force anyone left to random, move to intermission.
+   intermissionTimeRemaining = intermissionLength
+   roundTimeRemaining = nil
+   forcePlayersToRandom()
 end
 
 function notifyPlayersOfTimeRemaining()
    if cardDraftFinished then
+      -- Game over man, game over.
       return false
+
+   elseif intermissionTimeRemaining ~= nil then
+      -- We're in an intermission.
+      intermissionTimeRemaining = intermissionTimeRemaining - 1
+
+      if intermissionTimeRemaining <= 0 then
+	 nextRound()
+      else
+	 CustomGameEventManager:Send_ServerToAllClients("round-timer-count", {value = intermissionTimeRemaining, phase = "intermission"})
+      end
+   else
+      -- We're in the main drafting phase.
+      roundTimeRemaining = roundTimeRemaining - 1
+
+      if roundTimeRemaining <= 0 then
+	 nextIntermission()
+      else
+	 CustomGameEventManager:Send_ServerToAllClients("round-timer-count", {value = roundTimeRemaining, phase = "draft"})
+      end
    end
-   
-   timeRemaining = timeRemaining - 1
-   CustomGameEventManager:Send_ServerToAllClients("round-timer-count", {time = timeRemaining})
-   if timeRemaining <= 0 then
-      timeRemaining = roundTime
-      forcePlayersToRandom()
-   end
+
    return 1
 end
 
@@ -258,9 +287,12 @@ end
 function forcePlayerToRandom(playerId)
    local playableCards = getPlayableCards(playerId)
    if #playableCards > 0 then
+      local randomed = randomCard(playableCards)
+      randomed["reason"] = "random"
+      
       playerDraftedCard(
 	 playerId,
-	 randomCard(playableCards)
+	 randomed
       )
    end
 end
@@ -279,6 +311,7 @@ function testForAutomaticPlay(playerId)
       
    elseif #playableCards == 1 then
       -- We've only got one choice: force it.
+      playableCards[1]["reason"] = "forced"
       playerDraftedCard(playerId, playableCards[1])
    end
 end

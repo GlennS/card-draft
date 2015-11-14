@@ -7,6 +7,27 @@
 	ultimate = "ultimate",
 	hero = "hero",
 
+	message = "",
+	messages = {
+	    welcome: "welcome-to-draft",
+	    draftTimeRemaining: "draft-time-remaining",
+	    intermissionTimeRemaining: "intermission-time-remaining",
+	    player: "player-pick",
+	    forced: "forced-pick",
+	    random: "random-pick",
+	    noChoices: "cannot-pick",
+	    ready: "ready-for-pick"
+	},
+
+	setMessage = function(newMessage, cardName) {
+	    message = newMessage;
+	    if (cardName) {
+		message += ' ' + $.Localize('#' + cardName);
+	    }
+	    
+	    roundTimer.text = message;
+	},
+
 	cardsContainer = $("#cards"),
 	picksContainer = $("#confirmed-picks"),
 	roundTimer = $("#timer-text"),
@@ -71,6 +92,8 @@
 	cardElements = [],
 
 	showHand = function(hand) {
+	    var anyPicks = false;
+	    
 	    // Remove last round's cards.
 	    cardsContainer.RemoveAndDeleteChildren();
 	    
@@ -84,17 +107,27 @@
 		cardEl.AddClass(card.name);
 		cardEl.enabled = isAvailable(card);
 
+		anyPicks = anyPicks || cardEl.enabled;
+
 		cardElements.push(cardEl);
 
 		cardEl.SetPanelEvent("onactivate", function() {
-		    pick(card);		
+		    playerPicked(card);		
 		});
 		
 		var image = imageTypes[card.type](cardEl, card.name);
 	    });
+
+	    if (anyPicks) {
+		setMessage(messages.ready);
+	    } else {
+		setMessage(messages.noChoices);
+	    }
 	},
 
-	pick = function(card) {
+	playerPicked = function(card) {
+	    setMessage(messages.player, card.name);
+	    
 	    updateUIToReflectPick(card);
 	    
 	    // Tell the server what we want.
@@ -116,6 +149,10 @@
 	updateUIToReflectPick = function(card) {
 	    if (alreadyPicked(card)) {
 		return;
+	    }
+
+	    if (card.reason) {
+		setMessage(messages[card.reason], card.name);
 	    }
 
 	    /*
@@ -146,10 +183,19 @@
 	    return needed > 0;
 	},
 
-	updateRoundTimer = function(timerValue) {
-	    roundTimer.text = timerValue.time + "s";
+	updateRoundTimer = function(timer) {
+	    roundTimer.text = message
+		+ '\n'
+		+ messages[timer.phase + "TimeRemaining"]
+		+ timer.value;
 	};
 
+    Object.keys(messages).forEach(function(m) {
+	messages[m] = $.Localize('#' + messages[m]);
+    });
+
+    setMessage(messages.welcome);
+    
     GameEvents.Subscribe("player-passed-hand", showHand);
     
     // Listen for new pick events (in case we were forced to pick a card because we ran out of time, or it was the only option).
