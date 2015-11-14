@@ -8,16 +8,24 @@
 	hero = "hero",
 
 	message = "",
-	messages = {
-	    welcome: "welcome-to-draft",
-	    draftTimeRemaining: "draft-time-remaining",
-	    intermissionTimeRemaining: "intermission-time-remaining",
-	    player: "player-pick",
-	    forced: "forced-pick",
-	    random: "random-pick",
-	    noChoices: "cannot-pick",
-	    ready: "ready-for-pick"
-	},
+	messages = function() {
+	    var lookup = {
+		welcome: "welcome-to-draft",
+		draftTimeRemaining: "draft-time-remaining",
+		intermissionTimeRemaining: "intermission-time-remaining",
+		player: "player-pick",
+		forced: "forced-pick",
+		random: "random-pick",
+		noChoices: "cannot-pick",
+		ready: "ready-for-pick"
+	    };
+
+	    Object.keys(lookup).forEach(function(m) {
+		lookup[m] = $.Localize('#' + lookup[m]);
+	    });
+
+	    return lookup;
+	}(),
 
 	setMessage = function(newMessage, cardName) {
 	    message = newMessage;
@@ -28,7 +36,22 @@
 	    roundTimer.text = message;
 	},
 
-	cardsContainer = $("#cards"),
+	limits = {
+	    hero: 1,
+	    ultimate: 1,
+	    ability: 3
+	},
+
+	cardContainers = function() {
+	    var containers = {};
+	    
+	    Object.keys(limits).forEach(function(type) {
+		containers[type] = $('#' + type + '-cards');
+	    });
+
+	    return containers;
+	}(),
+	
 	picksContainer = $("#confirmed-picks"),
 	roundTimer = $("#timer-text"),
 	
@@ -41,12 +64,6 @@
 	    {type: ultimate, name: "drow_ranger_marksmanship"},
 	    {type: hero, name: "npc_dota_hero_axe"}
 	],
-
-	limits = {
-	    hero: 1,
-	    ultimate: 1,
-	    ability: 3
-	},
 
 	abilityImage = function(parent, name) {
 	    var el = $.CreatePanel("DOTAAbilityImage", parent, "");
@@ -95,13 +112,15 @@
 	    var anyPicks = false;
 	    
 	    // Remove last round's cards.
-	    cardsContainer.RemoveAndDeleteChildren();
+	    Object.keys(cardContainers).forEach(function(type) {
+		cardContainers[type].RemoveAndDeleteChildren();
+	    });
 	    
 	    // Add each card in our new hand.
 	    Object.keys(hand).forEach(function(k) {
 		var card = hand[k];
 
-		var cardEl = $.CreatePanel("Button", cardsContainer, "");
+		var cardEl = $.CreatePanel("Button", cardContainers[card.type], "");
 		cardEl.AddClass("card");
 		cardEl.AddClass(card.type + "-card");
 		cardEl.AddClass(card.name);
@@ -190,9 +209,7 @@
 		+ timer.value;
 	};
 
-    Object.keys(messages).forEach(function(m) {
-	messages[m] = $.Localize('#' + messages[m]);
-    });
+
 
     setMessage(messages.welcome);
     

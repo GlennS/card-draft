@@ -16,7 +16,11 @@ Replaces hero selection.
     <Panel id="timer">
       <Label id="timer-text">Timer</Label>
     </Panel>
-    <Panel id="cards"/>
+    <Panel id="cards">
+      <Panel id="ability-cards" />
+      <Panel id="ultimate-cards" />
+      <Panel id="hero-cards" />
+    </Panel>
     <Panel id="confirmed-picks"/>
   </Panel>
 </root>

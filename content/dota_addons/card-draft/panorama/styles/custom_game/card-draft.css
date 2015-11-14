@@ -15,7 +15,9 @@
 
 #timer {
     margin-top: 10px;
-    height: 10%;
+    max-height: 30%;
+    max-width: 70%;
+    white-space: normal;
     vertical-align: top;
     horizontal-align: middle;
 }
@@ -30,9 +32,13 @@
 #cards {
     vertical-align: middle;
     horizontal-align: middle;
+    flow-children: down;
+    margin: 10px;
+}
+
+#cards Panel {
     flow-children: right;
     margin: 10px;
-    background-color: #34282C;
 }
 
 #confirmed-picks {
