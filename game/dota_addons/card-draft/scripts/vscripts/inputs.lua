@@ -108,6 +108,10 @@ function isPickableAbility(name, ability)
       end
    end
 
+   if ability["MaxLevel"] == "1" then
+      return false
+   end
+
    local behaviour = ability["AbilityBehavior"]
 
    if (behaviour == nil) then
