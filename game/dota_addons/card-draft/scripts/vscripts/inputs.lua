@@ -56,18 +56,25 @@ function loadAbilities(heroNames)
    local ultimates = {}
 
    local abilities = LoadKeyValues("scripts/data/npc_abilities.txt")
+   local heroForAbility = {}
 
    for name, ability in pairs(abilities) do
-      if isPickableAbility(name, ability) and isHeroAbility(name, heroNames) then
-	 if (ability["AbilityType"] == "DOTA_ABILITY_TYPE_ULTIMATE") then
-	    table.insert(ultimates, name)
-	 else
-	    table.insert(normal, name)
+      if isPickableAbility(name, ability) then
+	 local hero =  getHeroForAbility(name, heroNames)
+
+	 if hero ~= nil then
+	    heroForAbility[name] = hero
+	    
+	    if (ability["AbilityType"] == "DOTA_ABILITY_TYPE_ULTIMATE") then
+	       table.insert(ultimates, name)
+	    else
+	       table.insert(normal, name)
+	    end
 	 end
       end
    end
 
-   return {normal = normal, ultimates = ultimates}
+   return {normal = normal, ultimates = ultimates, heroForAbility = heroForAbility}
 end
 
 function isPickableAbility(name, ability)
@@ -121,16 +128,16 @@ local heroNamePrefixLength = string.len(heroNamePrefix)
 
 -- Tests whether an ability belongs to a hero.
 -- Does this by checking whether it contains that hero's name.
-function isHeroAbility(abilityName, heroNames)
+function getHeroForAbility(abilityName, heroNames)   
    for _, heroName in ipairs(heroNames) do
       heroName = string.sub(heroName, heroNamePrefixLength + 1)
       
       if string.starts(abilityName, heroName) then
-	 return true
+	 return heroName
       end
    end
 
-   return false
+   return nil
 end
 
 -- See http://lua-users.org/wiki/StringRecipes

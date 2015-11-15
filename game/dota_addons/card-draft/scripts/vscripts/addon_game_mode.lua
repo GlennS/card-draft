@@ -26,7 +26,12 @@ function CardDraftGameMode:OnConnectFull()
 end
 
 function CardDraftGameMode:StateChange()
-   if GameRules:State_Get() == DOTA_GAMERULES_STATE_PRE_GAME then
+   local state = GameRules:State_Get()
+   
+   if state == DOTA_GAMERULES_STATE_HERO_SELECTION then
       deal()
+   
+   elseif state == DOTA_GAMERULES_STATE_PRE_GAME then
+      draft()
    end
 end

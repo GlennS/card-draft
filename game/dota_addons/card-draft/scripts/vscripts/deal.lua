@@ -36,8 +36,6 @@ cardCounts = {
 
 function deal()
    print("Entering Card Draft deal phase")
-
-   -- Pause to prevent standard hero picking from happening.
    PauseGame(true)
 
    -- Load all possible options.
@@ -48,6 +46,8 @@ function deal()
       ability = allAbilities["normal"],
       ultimate = allAbilities["ultimates"]
    }
+   local heroForAbility = allAbilities["heroForAbility"]
+   local heroesToCache = {}
 
    handsByPlayer = {}
    nextHandsByPlayer = {}
@@ -64,6 +64,10 @@ function deal()
 	 
       elseif cardType == "ability" or cardType == "ultimate" then
 	 PrecacheItemByNameAsync(name, onCacheSuccess)
+
+	 local hero = heroForAbility[name]
+
+	 heroesToCache[hero] = true
       else
 	 error("Unknown type of card " .. cardType)
       end
@@ -75,7 +79,7 @@ function deal()
       local dealt = list[i]
 
       table.remove(list, i)
-
+      
       preCache(dealt, cardType)
 
       return {type = cardType, name = dealt}
@@ -102,11 +106,28 @@ function deal()
    end
 
    forEachPlayer(dealStartingHand)
+
+   -- Precache the heroes which the abilities dealt belonged to.
+   for name, _ in pairs(heroesToCache) do
+      -- TODO: work out which one of these I actually need.
+      PrecacheResource("model_folder", "models/heroes/" .. name .. "/")
+      preCache("npc_dota_hero_" .. name, "hero")
+   end
+
    setupPassToPlayer()
+
+   PauseGame(false)
+end
+
+function draft()
+   -- Pause while we draft
+   PauseGame(true)
+   
    listenToPlayerEvent(
       "player-drafted-card",
       playerDraftedCard
    )
+   
    waitForAllPlayers(
       function()
 	 Timers:CreateTimer({useGameTime = false, callback = notifyPlayersOfTimeRemaining})	 
