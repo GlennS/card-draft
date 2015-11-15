@@ -28,7 +28,8 @@ function loadHeroes()
       "npc_dota_hero_abyssal_underlord",
       "npc_dota_hero_lone_druid",
       "npc_dota_hero_ogre_magi",
-      "npc_dota_hero_meepo"
+      "npc_dota_hero_meepo",
+      "npc_dota_hero_elder_titan"
    }
    local heroNames = {}
 
