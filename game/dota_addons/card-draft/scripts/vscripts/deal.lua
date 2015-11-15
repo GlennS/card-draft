@@ -107,8 +107,11 @@ function deal()
       "player-drafted-card",
       playerDraftedCard
    )
-   waitForAllPlayers(sendHandsToPlayers)
-   Timers:CreateTimer({useGameTime = false, callback = notifyPlayersOfTimeRemaining})
+   waitForAllPlayers(
+      function()
+	 Timers:CreateTimer({useGameTime = false, callback = notifyPlayersOfTimeRemaining})	 
+      end
+   )
 end
 
 -- Decide which player we'll pass our hand to.
@@ -352,7 +355,7 @@ function sendHandToPlayer(playerId)
 end
 
 function clearHeroAbilities(hero)
-   for i = 0, hero:GetAbilityCount() do
+   for i = 0, (hero:GetAbilityCount() - 1) do
       local abilityToRemove = hero:GetAbilityByIndex(i)
       
       if abilityToRemove ~= nil then
@@ -375,22 +378,15 @@ function selectHeroAndAbilities(playerId)
    local player = PlayerResource:GetPlayer(playerId)
    local heroName = picks["hero"][1]
 
-   PrecacheUnitByNameAsync(
-      heroName,
-      function()
-	 CreateHeroForPlayer(heroName, player)
-	 local hero = player:GetAssignedHero()
+   CreateHeroForPlayer(heroName, player)
+   local hero = player:GetAssignedHero()
 
-	 clearHeroAbilities(hero)
+   clearHeroAbilities(hero)
 
-	 -- Add the custom abilities they picked.
-	 for _, ability in ipairs(picks["ability"]) do
-	    hero:AddAbility(ability)
-	 end
+   -- Add the custom abilities they picked.
+   for _, ability in ipairs(picks["ability"]) do
+      hero:AddAbility(ability)
+   end
 
-	 hero:AddAbility(picks["ultimate"][1])
-	 
-	 -- TODO: add sub-abilities
-      end
-   )
+   hero:AddAbility(picks["ultimate"][1])
 end
