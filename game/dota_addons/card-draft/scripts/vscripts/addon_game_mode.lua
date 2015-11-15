@@ -7,6 +7,7 @@ if CardDraftGameMode == nil then
 end
 
 function Precache(context)
+   PrecacheResource("model_folder", "models/courier/", context)
 end
 
 function Activate()

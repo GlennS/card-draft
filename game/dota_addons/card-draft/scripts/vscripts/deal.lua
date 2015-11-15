@@ -54,12 +54,29 @@ function deal()
    picksByPlayer = {}
    passToPlayer = {}
 
+   local onCacheSuccess = function()
+      -- No-op
+   end
+   
+   local preCache = function(name, cardType)
+      if cardType == "hero" then
+	 PrecacheUnitByNameAsync(name, onCacheSuccess)
+	 
+      elseif cardType == "ability" or cardType == "ultimate" then
+	 PrecacheItemByNameAsync(name, onCacheSuccess)
+      else
+	 error("Unknown type of card " .. cardType)
+      end
+   end
+
    local dealCard = function(list, cardType)
       -- Randomly pick from the list of ultimates.
       local i = RandomInt(1, #list)
       local dealt = list[i]
 
       table.remove(list, i)
+
+      preCache(dealt, cardType)
 
       return {type = cardType, name = dealt}
    end
