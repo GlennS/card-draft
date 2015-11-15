@@ -272,6 +272,8 @@ end
 function notifyPlayersOfTimeRemaining()
    if cardDraftFinished then
       -- Game over man, game over.
+      assignAllHeroes()
+      CustomGameEventManager:Send_ServerToAllClients("round-timer-count", {value = 0, phase = "end"})
       return false
 
    elseif intermissionTimeRemaining ~= nil then
@@ -378,7 +380,7 @@ function selectHeroAndAbilities(playerId)
    local player = PlayerResource:GetPlayer(playerId)
    local heroName = picks["hero"][1]
 
-   CreateHeroForPlayer(heroName, player)
+   PlayerResource:ReplaceHeroWith(playerId, heroName, 625, 0)
    local hero = player:GetAssignedHero()
 
    clearHeroAbilities(hero)

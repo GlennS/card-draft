@@ -16,14 +16,17 @@ function Activate()
 end
 
 function CardDraftGameMode:InitGameMode()
-   GameRules:SetHeroSelectionTime(0)
    ListenToGameEvent("game_rules_state_change", self.StateChange, nil)
+   ListenToGameEvent('player_connect_full', self.OnConnectFull, nil)
+end
+
+function CardDraftGameMode:OnConnectFull()
+   -- Force all players to be Abbadon
+   GameRules:GetGameModeEntity():SetCustomGameForceHero("npc_dota_hero_abaddon")
 end
 
 function CardDraftGameMode:StateChange()
-   if GameRules:State_Get() == DOTA_GAMERULES_STATE_HERO_SELECTION then
+   if GameRules:State_Get() == DOTA_GAMERULES_STATE_PRE_GAME then
       deal()
-   elseif GameRules:State_Get() == DOTA_GAMERULES_STATE_PRE_GAME then
-      assignAllHeroes()
    end
 end

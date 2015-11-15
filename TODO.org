@@ -1,17 +1,11 @@
 * Bad abilities
 Check through to make sure there aren't any remaining bad abilities.
 
-* Model Loading Problem
-Cosmetic items, special couriers and summoner units don't display properly.
-
 * Ability Names
 When display in Panorama, they work when they're a tooltip, but not otherwise.
 
 * Credits
 Separate tab for credits - not sure how this works, but beacon fire has it.
-
-* Layout Cards Differently
-A row each for things?
 
 * Styling
 Generally it looks quite ugly at present.

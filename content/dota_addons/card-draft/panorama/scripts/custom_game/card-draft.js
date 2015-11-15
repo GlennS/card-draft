@@ -203,13 +203,16 @@
 	},
 
 	updateRoundTimer = function(timer) {
+	    if (timer.phase === "end") {
+		$('#timer').GetParent().DeleteAsync(0);
+		return;
+	    }
+	    
 	    roundTimer.text = message
 		+ '\n'
 		+ messages[timer.phase + "TimeRemaining"]
 		+ timer.value;
 	};
-
-
 
     setMessage(messages.welcome);
     

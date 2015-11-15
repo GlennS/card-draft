@@ -6,7 +6,7 @@
 	/>
     
     <CustomUIElement
-	type="HeroSelection"
+	type="Hud"
 	layoutfile="file://{resources}/layout/custom_game/card-draft.xml"
 	/>
   </Panel>
