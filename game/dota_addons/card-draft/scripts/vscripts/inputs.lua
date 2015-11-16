@@ -99,7 +99,9 @@ function isPickableAbility(name, ability)
       -- Transformed dragon knight ability
       "dragon_knight_frost_breath",
       -- This slipts though because it's prefixed by the hero name 'centaur'.
-      "centaur_khan_war_stomp"
+      "centaur_khan_war_stomp",
+      -- Needs to be paired with ancient_apparaition_ice_blast_release - I haven't been able to make this work well.
+      "ancient_apparition_ice_blast"
    }
 
    for _, forbidden in pairs(forbiddenNames) do
